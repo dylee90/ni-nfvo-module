@@ -4,4 +4,4 @@ from __future__ import absolute_import
 
 # import apis into api package
 from swagger_client.api.info_api import InfoApi
-from swagger_client.api.trafgen_api import TrafgenApi
+from swagger_client.api.sfcr_api import SfcrApi

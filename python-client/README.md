@@ -55,11 +55,11 @@ from pprint import pprint
 api_instance = swagger_client.InfoApi(swagger_client.ApiClient(configuration))
 
 try:
-    # Get current topology information.
-    api_response = api_instance.get_topology()
+    # Get current placement information, i.e., list of all active VNF instances including their location.
+    api_response = api_instance.get_placement()
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling InfoApi->get_topology: %s\n" % e)
+    print("Exception when calling InfoApi->get_placement: %s\n" % e)
 
 ```
 
@@ -69,8 +69,12 @@ All URIs are relative to *http://localhost:8080/v2*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*InfoApi* | [**get_placement**](docs/InfoApi.md#get_placement) | **GET** /placement | Get current placement information, i.e., list of all active VNF instances including their location.
+*InfoApi* | [**get_requests**](docs/InfoApi.md#get_requests) | **GET** /requests | Get currently active SFC requests.
+*InfoApi* | [**get_routes**](docs/InfoApi.md#get_routes) | **GET** /routes | Get current route information, i.e., list of all active SFCRs including their paths.
 *InfoApi* | [**get_topology**](docs/InfoApi.md#get_topology) | **GET** /topology | Get current topology information.
-*TrafgenApi* | [**add_sfcr**](docs/TrafgenApi.md#add_sfcr) | **POST** /sfcr | Add new SFC request.
+*InfoApi* | [**get_vnf_flavors**](docs/InfoApi.md#get_vnf_flavors) | **GET** /vnfflavors | Get available VNF flavors.
+*SfcrApi* | [**add_sfcr**](docs/SfcrApi.md#add_sfcr) | **POST** /sfcr | Add new SFC request.
 
 
 ## Documentation For Models
@@ -83,6 +87,7 @@ Class | Method | HTTP request | Description
  - [RouteHops](docs/RouteHops.md)
  - [SFCR](docs/SFCR.md)
  - [Topology](docs/Topology.md)
+ - [VNFFlavor](docs/VNFFlavor.md)
  - [VNFInstance](docs/VNFInstance.md)
  - [VNFType](docs/VNFType.md)
 

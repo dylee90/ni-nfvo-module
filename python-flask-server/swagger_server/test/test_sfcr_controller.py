@@ -9,8 +9,8 @@ from swagger_server.models.sfcr import SFCR  # noqa: E501
 from swagger_server.test import BaseTestCase
 
 
-class TestTrafgenController(BaseTestCase):
-    """TrafgenController integration test stubs"""
+class TestSfcrController(BaseTestCase):
+    """SfcrController integration test stubs"""
 
     def test_add_sfcr(self):
         """Test case for add_sfcr

@@ -7,14 +7,15 @@ Provides interfaces to the main functionalities and data of the Tacker NFVO.
 #### Managing new requests (triggered by SFCR arrivals)
 
 - Operator (or in our case, traffic generator / SFCR orchestrator) sends information of newly arrived SFCR to NFVO module.
-- NVFO module propagates this information to the AI module which then takes care of finding the optimal placement for the new configuration. 
+- NVFO module propagates this information to the AI module which then takes care of finding the optimal placement for the new configuration.
 
 #### Providing information (triggered by requests from AI module)
 
-- Topology.
-- Placement.
+- Topology - also covered by monitoring module (`/nodes`, `/nodes/{id}`, `/links`, and `/link/{id}`).
+- Placement - also covered by monitoring module (`/vnfinstances`, `/vnfinstances/{id}`).
 - Routes.
 - Requests.
+- Available VNF flavors - also covered by monitoring module (`/vnfflavors` and `/vnfflavors/{id}`).
 
 #### Performing basic VNF / VM / SFC actions (triggered by requests from AI module)
 

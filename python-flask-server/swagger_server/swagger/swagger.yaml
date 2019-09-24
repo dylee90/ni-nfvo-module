@@ -16,7 +16,7 @@ paths:
   /sfcr:
     post:
       tags:
-      - "trafgen"
+      - "sfcr"
       summary: "Add new SFC request."
       description: ""
       operationId: "add_sfcr"
@@ -38,7 +38,7 @@ paths:
           description: "Invalid SFC request parameters supplied."
         405:
           description: "Invalid input."
-      x-swagger-router-controller: "swagger_server.controllers.trafgen_controller"
+      x-swagger-router-controller: "swagger_server.controllers.sfcr_controller"
   /topology:
     get:
       tags:
@@ -56,6 +56,88 @@ paths:
           description: "Success."
           schema:
             $ref: "#/definitions/Topology"
+      x-swagger-router-controller: "swagger_server.controllers.info_controller"
+  /placement:
+    get:
+      tags:
+      - "info"
+      summary: "Get current placement information, i.e., list of all active VNF instances\
+        \ including their location."
+      description: ""
+      operationId: "get_placement"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "Success."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/VNFInstance"
+      x-swagger-router-controller: "swagger_server.controllers.info_controller"
+  /routes:
+    get:
+      tags:
+      - "info"
+      summary: "Get current route information, i.e., list of all active SFCRs including\
+        \ their paths."
+      description: ""
+      operationId: "get_routes"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "Success."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Route"
+      x-swagger-router-controller: "swagger_server.controllers.info_controller"
+  /requests:
+    get:
+      tags:
+      - "info"
+      summary: "Get currently active SFC requests."
+      description: ""
+      operationId: "get_requests"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "Success."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/SFCR"
+      x-swagger-router-controller: "swagger_server.controllers.info_controller"
+  /vnfflavors:
+    get:
+      tags:
+      - "info"
+      summary: "Get available VNF flavors."
+      description: ""
+      operationId: "get_vnf_flavors"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "Success."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/VNFFlavor"
       x-swagger-router-controller: "swagger_server.controllers.info_controller"
 definitions:
   VNFType:
@@ -75,6 +157,12 @@ definitions:
       ram:
         type: "integer"
         format: "int32"
+    example:
+      n_cores: 5
+      delay: 1
+      name: "name"
+      capacity: 6
+      ram: 5
   SFCR:
     type: "object"
     properties:
@@ -210,6 +298,16 @@ definitions:
         format: "int64"
       ip:
         type: "string"
+    example:
+      ip: "ip"
+      id: 0
+      type:
+        n_cores: 5
+        delay: 1
+        name: "name"
+        capacity: 6
+        ram: 5
+      node_id: 2
   Assignment:
     type: "object"
     properties:
@@ -233,6 +331,39 @@ definitions:
         items:
           $ref: "#/definitions/Route_hops"
     description: "Detailed routing information for a given SFCR ID."
+    example:
+      hops:
+      - id: 6
+        type: "type"
+      - id: 6
+        type: "type"
+      sfcr_id: 0
+  VNFFlavor:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      name:
+        type: "string"
+      capacity_mbps:
+        type: "integer"
+        format: "int32"
+      delay_us:
+        type: "integer"
+        format: "int32"
+      n_cores:
+        type: "integer"
+        format: "int32"
+      ram_mb:
+        type: "integer"
+        format: "int32"
+    example:
+      n_cores: 1
+      ram_mb: 5
+      capacity_mbps: 0
+      name: "name"
+      id: "id"
+      delay_us: 6
   Route_hops:
     properties:
       type:
@@ -241,6 +372,9 @@ definitions:
       id:
         type: "integer"
         format: ":int64"
+    example:
+      id: 6
+      type: "type"
 externalDocs:
   description: "Find out more about DPNM NI."
   url: "http://dpnm.postech.ac.kr/"

@@ -17,7 +17,7 @@ from __future__ import absolute_import
 
 # import apis into sdk package
 from swagger_client.api.info_api import InfoApi
-from swagger_client.api.trafgen_api import TrafgenApi
+from swagger_client.api.sfcr_api import SfcrApi
 
 # import ApiClient
 from swagger_client.api_client import ApiClient
@@ -31,5 +31,6 @@ from swagger_client.models.route import Route
 from swagger_client.models.route_hops import RouteHops
 from swagger_client.models.sfcr import SFCR
 from swagger_client.models.topology import Topology
+from swagger_client.models.vnf_flavor import VNFFlavor
 from swagger_client.models.vnf_instance import VNFInstance
 from swagger_client.models.vnf_type import VNFType

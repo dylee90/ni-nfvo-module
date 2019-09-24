@@ -23,5 +23,6 @@ from swagger_client.models.route import Route
 from swagger_client.models.route_hops import RouteHops
 from swagger_client.models.sfcr import SFCR
 from swagger_client.models.topology import Topology
+from swagger_client.models.vnf_flavor import VNFFlavor
 from swagger_client.models.vnf_instance import VNFInstance
 from swagger_client.models.vnf_type import VNFType

@@ -14,7 +14,7 @@ paths:
   /sfcr:
     post:
       tags:
-      - "trafgen"
+      - "sfcr"
       summary: "Add new SFC request."
       description: ""
       operationId: "addSFCR"
@@ -52,6 +52,78 @@ paths:
           description: "Success."
           schema:
             $ref: "#/definitions/Topology"
+  /placement:
+    get:
+      tags:
+      - "info"
+      summary: "Get current placement information, i.e., list of all active VNF instances including their location."
+      description: ""
+      operationId: "getPlacement"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Success."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/VNFInstance"
+  /routes:
+    get:
+      tags:
+      - "info"
+      summary: "Get current route information, i.e., list of all active SFCRs including their paths."
+      description: ""
+      operationId: "getRoutes"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Success."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Route"
+  /requests:
+    get:
+      tags:
+      - "info"
+      summary: "Get currently active SFC requests."
+      description: ""
+      operationId: "getRequests"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Success."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/SFCR"
+  /vnfflavors:
+    get:
+      tags:
+      - "info"
+      summary: "Get available VNF flavors."
+      description: ""
+      operationId: "getVNFFlavors"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Success."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/VNFFlavor"
 definitions:
   VNFType:
     type: "object"
@@ -214,6 +286,32 @@ definitions:
             id:
               type: "integer"
               format: ":int64"
+  VNFFlavor:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      name:
+        type: "string"
+      capacity_mbps:
+        type: "integer"
+        format: "int32"
+      delay_us:
+        type: "integer"
+        format: "int32"
+      n_cores:
+        type: "integer"
+        format: "int32"
+      ram_mb:
+        type: "integer"
+        format: "int32"
+    example:
+      n_cores: 1
+      ram_mb: 5
+      capacity_mbps: 0
+      name: "name"
+      id: "id"
+      delay_us: 6
 externalDocs:
   description: "Find out more about DPNM NI."
   url: "http://dpnm.postech.ac.kr/"

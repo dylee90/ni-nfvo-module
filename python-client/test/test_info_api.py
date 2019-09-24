@@ -29,10 +29,38 @@ class TestInfoApi(unittest.TestCase):
     def tearDown(self):
         pass
 
+    def test_get_placement(self):
+        """Test case for get_placement
+
+        Get current placement information, i.e., list of all active VNF instances including their location.  # noqa: E501
+        """
+        pass
+
+    def test_get_requests(self):
+        """Test case for get_requests
+
+        Get currently active SFC requests.  # noqa: E501
+        """
+        pass
+
+    def test_get_routes(self):
+        """Test case for get_routes
+
+        Get current route information, i.e., list of all active SFCRs including their paths.  # noqa: E501
+        """
+        pass
+
     def test_get_topology(self):
         """Test case for get_topology
 
         Get current topology information.  # noqa: E501
+        """
+        pass
+
+    def test_get_vnf_flavors(self):
+        """Test case for get_vnf_flavors
+
+        Get available VNF flavors.  # noqa: E501
         """
         pass
 

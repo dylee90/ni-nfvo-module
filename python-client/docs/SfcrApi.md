@@ -1,10 +1,10 @@
-# swagger_client.TrafgenApi
+# swagger_client.SfcrApi
 
 All URIs are relative to *http://localhost:8080/v2*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**add_sfcr**](TrafgenApi.md#add_sfcr) | **POST** /sfcr | Add new SFC request.
+[**add_sfcr**](SfcrApi.md#add_sfcr) | **POST** /sfcr | Add new SFC request.
 
 
 # **add_sfcr**
@@ -23,14 +23,14 @@ from swagger_client.rest import ApiException
 from pprint import pprint
 
 # create an instance of the API class
-api_instance = swagger_client.TrafgenApi()
+api_instance = swagger_client.SfcrApi()
 body = swagger_client.SFCR() # SFCR | SFC request object to be added.
 
 try:
     # Add new SFC request.
     api_instance.add_sfcr(body)
 except ApiException as e:
-    print("Exception when calling TrafgenApi->add_sfcr: %s\n" % e)
+    print("Exception when calling SfcrApi->add_sfcr: %s\n" % e)
 ```
 
 ### Parameters

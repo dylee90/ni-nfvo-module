@@ -16,15 +16,15 @@ from __future__ import absolute_import
 import unittest
 
 import swagger_client
-from swagger_client.api.trafgen_api import TrafgenApi  # noqa: E501
+from swagger_client.api.sfcr_api import SfcrApi  # noqa: E501
 from swagger_client.rest import ApiException
 
 
-class TestTrafgenApi(unittest.TestCase):
-    """TrafgenApi unit test stubs"""
+class TestSfcrApi(unittest.TestCase):
+    """SfcrApi unit test stubs"""
 
     def setUp(self):
-        self.api = swagger_client.api.trafgen_api.TrafgenApi()  # noqa: E501
+        self.api = swagger_client.api.sfcr_api.SfcrApi()  # noqa: E501
 
     def tearDown(self):
         pass
