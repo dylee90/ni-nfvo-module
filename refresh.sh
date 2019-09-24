@@ -11,7 +11,7 @@ unzip python-client-generated.zip
 unzip python-flask-server-generated.zip
 
 # Copy main code / files into server folder.
-cp ai_module.py python-flask-server
+# cp nfvo_module.py python-flask-server
 
 # Clean up.
 rm python-client-generated.zip

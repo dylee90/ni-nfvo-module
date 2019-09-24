@@ -1,3 +1,4 @@
+---
 swagger: "2.0"
 info:
   description: "NFVO module service for the NI project."
@@ -7,7 +8,8 @@ host: "localhost:8080"
 basePath: "/v2"
 tags:
 - name: "nfvo_module"
-  description: "Provides interfaces to the main functionalities and data of the Tacker NFVO."
+  description: "Provides interfaces to the main functionalities and data of the Tacker\
+    \ NFVO."
 schemes:
 - "http"
 paths:
@@ -17,7 +19,7 @@ paths:
       - "trafgen"
       summary: "Add new SFC request."
       description: ""
-      operationId: "addSFCR"
+      operationId: "add_sfcr"
       consumes:
       - "application/json"
       produces:
@@ -36,22 +38,25 @@ paths:
           description: "Invalid SFC request parameters supplied."
         405:
           description: "Invalid input."
+      x-swagger-router-controller: "swagger_server.controllers.trafgen_controller"
   /topology:
     get:
       tags:
       - "info"
       summary: "Get current topology information."
       description: ""
-      operationId: "getTopology"
+      operationId: "get_topology"
       consumes:
       - "application/json"
       produces:
       - "application/json"
+      parameters: []
       responses:
         200:
           description: "Success."
           schema:
             $ref: "#/definitions/Topology"
+      x-swagger-router-controller: "swagger_server.controllers.info_controller"
 definitions:
   VNFType:
     type: "object"
@@ -104,6 +109,20 @@ definitions:
         type: "array"
         items:
           type: "string"
+    example:
+      src_ip: "src_ip"
+      src_port: 6
+      duration: 2
+      delay: 5
+      bw: 5
+      proto: "proto"
+      nf_chain:
+      - "nf_chain"
+      - "nf_chain"
+      arrivaltime: "2000-01-23T04:56:07.000+00:00"
+      dst_port: 1
+      id: 0
+      dst_ip: "dst_ip"
   Node:
     type: "object"
     properties:
@@ -155,6 +174,13 @@ definitions:
         items:
           type: "integer"
           format: "int64"
+    example:
+      node_list:
+      - 0
+      - 0
+      edge_list:
+      - 6
+      - 6
   MonitoringEntry:
     type: "object"
     properties:
@@ -178,14 +204,13 @@ definitions:
         type: "integer"
         format: "int64"
       type:
-        $ref: '#/definitions/VNFType'
+        $ref: "#/definitions/VNFType"
       node_id:
         type: "integer"
         format: "int64"
       ip:
         type: "string"
   Assignment:
-    description: "Mapping between an SFCR and a list of VNF instances."
     type: "object"
     properties:
       sfcr_id:
@@ -196,8 +221,8 @@ definitions:
         items:
           type: "integer"
           format: "int64"
+    description: "Mapping between an SFCR and a list of VNF instances."
   Route:
-    description: "Detailed routing information for a given SFCR ID."
     type: "object"
     properties:
       sfcr_id:
@@ -206,14 +231,16 @@ definitions:
       hops:
         type: "array"
         items:
-          type: "object"
-          properties:
-            type:
-              description: "Node or VNFInstance."
-              type: "string"
-            id:
-              type: "integer"
-              format: ":int64"
+          $ref: "#/definitions/Route_hops"
+    description: "Detailed routing information for a given SFCR ID."
+  Route_hops:
+    properties:
+      type:
+        type: "string"
+        description: "Node or VNFInstance."
+      id:
+        type: "integer"
+        format: ":int64"
 externalDocs:
   description: "Find out more about DPNM NI."
   url: "http://dpnm.postech.ac.kr/"

@@ -16,7 +16,7 @@ Provides interfaces to the main functionalities and data of the Tacker NFVO.
 - Routes.
 - Requests.
 
-#### Performing basic VNF / VM / SFC actions
+#### Performing basic VNF / VM / SFC actions (triggered by requests from AI module)
 
 - Deploy / shut down VNF / VM.
 - Set / modify path through VNFs for a given SFCR.
@@ -28,3 +28,4 @@ Provides interfaces to the main functionalities and data of the Tacker NFVO.
 ### Modifying the API
 
 - TODO
+
