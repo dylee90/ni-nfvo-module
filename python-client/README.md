@@ -52,14 +52,14 @@ from swagger_client.rest import ApiException
 from pprint import pprint
 
 # create an instance of the API class
-api_instance = swagger_client.InfoApi(swagger_client.ApiClient(configuration))
+api_instance = swagger_client.ActionsApi(swagger_client.ApiClient(configuration))
+body = swagger_client.Body() # Body | Flavor of VNF instance to be deployed as well as the target node.
 
 try:
-    # Get current placement information, i.e., list of all active VNF instances including their location.
-    api_response = api_instance.get_placement()
-    pprint(api_response)
+    # Instantiate an instance of a VNF flavor on a given node.
+    api_instance.deploy_vnf(body)
 except ApiException as e:
-    print("Exception when calling InfoApi->get_placement: %s\n" % e)
+    print("Exception when calling ActionsApi->deploy_vnf: %s\n" % e)
 
 ```
 
@@ -69,6 +69,7 @@ All URIs are relative to *http://localhost:8080/v2*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*ActionsApi* | [**deploy_vnf**](docs/ActionsApi.md#deploy_vnf) | **POST** /deploy | Instantiate an instance of a VNF flavor on a given node.
 *InfoApi* | [**get_placement**](docs/InfoApi.md#get_placement) | **GET** /placement | Get current placement information, i.e., list of all active VNF instances including their location.
 *InfoApi* | [**get_requests**](docs/InfoApi.md#get_requests) | **GET** /requests | Get currently active SFC requests.
 *InfoApi* | [**get_routes**](docs/InfoApi.md#get_routes) | **GET** /routes | Get current route information, i.e., list of all active SFCRs including their paths.
@@ -80,6 +81,7 @@ Class | Method | HTTP request | Description
 ## Documentation For Models
 
  - [Assignment](docs/Assignment.md)
+ - [Body](docs/Body.md)
  - [Link](docs/Link.md)
  - [MonitoringEntry](docs/MonitoringEntry.md)
  - [Node](docs/Node.md)

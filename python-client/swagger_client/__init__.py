@@ -16,6 +16,7 @@
 from __future__ import absolute_import
 
 # import apis into sdk package
+from swagger_client.api.actions_api import ActionsApi
 from swagger_client.api.info_api import InfoApi
 from swagger_client.api.sfcr_api import SfcrApi
 
@@ -24,6 +25,7 @@ from swagger_client.api_client import ApiClient
 from swagger_client.configuration import Configuration
 # import models into sdk package
 from swagger_client.models.assignment import Assignment
+from swagger_client.models.body import Body
 from swagger_client.models.link import Link
 from swagger_client.models.monitoring_entry import MonitoringEntry
 from swagger_client.models.node import Node

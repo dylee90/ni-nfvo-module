@@ -34,8 +34,6 @@ paths:
           description: "Success."
         400:
           description: "Invalid SFC request parameters supplied."
-        405:
-          description: "Invalid input."
   /topology:
     get:
       tags:
@@ -124,6 +122,35 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/VNFFlavor"
+  /deploy:
+    post:
+      tags:
+      - "actions"
+      summary: "Instantiate an instance of a VNF flavor on a given node."
+      description: ""
+      operationId: "deployVNF"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Flavor of VNF instance to be deployed as well as the target node."
+        required: true
+        schema:
+          type: "object"
+          properties:
+            flavor:
+              $ref: "#/definitions/VNFFlavor"
+            node:
+              type: "integer"
+              format: "int64"
+      responses:
+        200:
+          description: "Success."
+        400:
+          description: "Invalid parameters supplied."
 definitions:
   VNFType:
     type: "object"

@@ -16,6 +16,7 @@ from __future__ import absolute_import
 
 # import models into model package
 from swagger_client.models.assignment import Assignment
+from swagger_client.models.body import Body
 from swagger_client.models.link import Link
 from swagger_client.models.monitoring_entry import MonitoringEntry
 from swagger_client.models.node import Node

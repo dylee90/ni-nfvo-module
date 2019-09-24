@@ -4,6 +4,7 @@
 from __future__ import absolute_import
 # import models into model package
 from swagger_server.models.assignment import Assignment
+from swagger_server.models.body import Body
 from swagger_server.models.link import Link
 from swagger_server.models.monitoring_entry import MonitoringEntry
 from swagger_server.models.node import Node

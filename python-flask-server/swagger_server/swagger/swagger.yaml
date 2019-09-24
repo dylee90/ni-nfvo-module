@@ -36,8 +36,6 @@ paths:
           description: "Success."
         400:
           description: "Invalid SFC request parameters supplied."
-        405:
-          description: "Invalid input."
       x-swagger-router-controller: "swagger_server.controllers.sfcr_controller"
   /topology:
     get:
@@ -139,6 +137,31 @@ paths:
             items:
               $ref: "#/definitions/VNFFlavor"
       x-swagger-router-controller: "swagger_server.controllers.info_controller"
+  /deploy:
+    post:
+      tags:
+      - "actions"
+      summary: "Instantiate an instance of a VNF flavor on a given node."
+      description: ""
+      operationId: "deploy_vnf"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Flavor of VNF instance to be deployed as well as the target\
+          \ node."
+        required: true
+        schema:
+          $ref: "#/definitions/body"
+      responses:
+        200:
+          description: "Success."
+        400:
+          description: "Invalid parameters supplied."
+      x-swagger-router-controller: "swagger_server.controllers.actions_controller"
 definitions:
   VNFType:
     type: "object"
@@ -364,6 +387,14 @@ definitions:
       name: "name"
       id: "id"
       delay_us: 6
+  body:
+    type: "object"
+    properties:
+      flavor:
+        $ref: "#/definitions/VNFFlavor"
+      node:
+        type: "integer"
+        format: "int64"
   Route_hops:
     properties:
       type:
