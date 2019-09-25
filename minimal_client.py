@@ -35,9 +35,13 @@ except ApiException as e:
 ## info
 
 try:
-    # Get current topology information.
+    # Get current topology and VNF flavor information.
     topology = info_api_instance.get_topology()
     print("[ minimal_client ] Received topology: %s." % str(topology))
+    flavors = info_api_instance.get_vnf_flavors()
+    print("[ minimal_client ] Received VNF flavors: %s." % str(flavors))
+    print("[ minimal_client ] Class of received items: %s." % str(flavors[0].__class__))
+
 except ApiException as e:
     print("Exception when calling InfoApi->get_topology: %s\n" % e)
 

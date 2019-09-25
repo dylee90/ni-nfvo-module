@@ -25,14 +25,14 @@ Provides interfaces to the main functionalities and data of the Tacker NFVO.
 ### Usage Instructions
 
 - Start server locally by calling `python3 -m swagger_server` in `python-flask-server`.
-- For the exemplary `minimal_client.py`, either copy and run the file in the `python-client` folder or add said folder to you `PYTHONPATH` environment variable prior to running it (e.g., `export PYTHONPATH=/mnt/e/git/nfvo-module/python-client`, `python3 minimal_client.py`).
+- For the exemplary `minimal_client.py`, either copy and run the file in the `python-client` folder or add said folder to your `PYTHONPATH` environment variable prior to running it (e.g., `export PYTHONPATH=/mnt/e/git/nfvo-module/python-client`, `python3 minimal_client.py`).
 
 ### Modifying the API
 
 - Import `swagger.yaml` into swagger editor [1].
 - Perform desired changes.
 - Use swagger editor to export an updated YAML file (`File -> Save as YAML`) and generate both server and client code (`Generate Server -> python-flask`, `Generate Client -> python`).
-- Copy the three files into this directory and run refresh.sh.
+- Copy the three files into this directory and run `refresh.sh`.
 
 [1] https://editor.swagger.io/
 

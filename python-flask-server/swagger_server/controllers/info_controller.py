@@ -63,4 +63,11 @@ def get_vnf_flavors():  # noqa: E501
 
     :rtype: List[VNFFlavor]
     """
-    return 'do some magic!'
+
+    print("[ info_controller ] Returning available VNF flavors.")
+
+    flavors = [
+        VNFFlavor(name = "firewall", capacity_mbps = 900, delay_us = 45, n_cores = 4, ram_mb = 1024),
+        VNFFlavor(name = "ids", capacity_mbps = 400, delay_us = 95, n_cores = 8, ram_mb = 4096)]
+
+    return flavors
