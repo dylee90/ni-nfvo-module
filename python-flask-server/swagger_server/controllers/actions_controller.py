@@ -18,6 +18,7 @@ def deploy_vnf(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = Body.from_dict(connexion.request.get_json())  # noqa: E501
+        print("[ actions_controller ] Received deployment request: %s" % str(body))
     return 'do some magic!'
 
 

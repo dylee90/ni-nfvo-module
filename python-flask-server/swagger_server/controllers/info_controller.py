@@ -50,7 +50,9 @@ def get_topology():  # noqa: E501
 
     :rtype: Topology
     """
-    return 'do some magic!'
+    print("[ info_controller ] Returning topology info.")
+    topology = Topology(edge_list = [1, 4, 7], node_list = [i for i in range(1, 11)])
+    return topology
 
 
 def get_vnf_flavors():  # noqa: E501

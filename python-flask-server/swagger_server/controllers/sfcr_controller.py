@@ -17,4 +17,5 @@ def add_sfcr(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = SFCR.from_dict(connexion.request.get_json())  # noqa: E501
+        print("[ sfcr_controller ] Received SFC request: %s." % body.to_dict())
     return 'do some magic!'
