@@ -36,6 +36,20 @@ class TestActionsApi(unittest.TestCase):
         """
         pass
 
+    def test_set_route(self):
+        """Test case for set_route
+
+        Route a request via the provided route.  # noqa: E501
+        """
+        pass
+
+    def test_shutdown_vnf(self):
+        """Test case for shutdown_vnf
+
+        Shut down a VNF instance.  # noqa: E501
+        """
+        pass
+
 
 if __name__ == '__main__':
     unittest.main()

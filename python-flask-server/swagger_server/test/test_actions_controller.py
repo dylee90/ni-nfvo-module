@@ -6,6 +6,7 @@ from flask import json
 from six import BytesIO
 
 from swagger_server.models.body import Body  # noqa: E501
+from swagger_server.models.route import Route  # noqa: E501
 from swagger_server.test import BaseTestCase
 
 
@@ -20,6 +21,34 @@ class TestActionsController(BaseTestCase):
         body = Body()
         response = self.client.open(
             '/v2/deploy',
+            method='POST',
+            data=json.dumps(body),
+            content_type='application/json')
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+    def test_set_route(self):
+        """Test case for set_route
+
+        Route a request via the provided route.
+        """
+        body = Route()
+        response = self.client.open(
+            '/v2/setRoute',
+            method='POST',
+            data=json.dumps(body),
+            content_type='application/json')
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+    def test_shutdown_vnf(self):
+        """Test case for shutdown_vnf
+
+        Shut down a VNF instance.
+        """
+        body = 789
+        response = self.client.open(
+            '/v2/shutdown',
             method='POST',
             data=json.dumps(body),
             content_type='application/json')

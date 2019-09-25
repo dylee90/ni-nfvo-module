@@ -151,6 +151,53 @@ paths:
           description: "Success."
         400:
           description: "Invalid parameters supplied."
+  /shutdown:
+    post:
+      tags:
+      - "actions"
+      summary: "Shut down a VNF instance."
+      description: ""
+      operationId: "shutdownVNF"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "ID of VNF instance to be shut down."
+        required: true
+        schema:
+          type: "integer"
+          format: "int64"
+      responses:
+        200:
+          description: "Success."
+        400:
+          description: "Invalid parameters supplied."
+  /setRoute:
+    post:
+      tags:
+      - "actions"
+      summary: "Route a request via the provided route."
+      description: ""
+      operationId: "setRoute"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Route information including SFCR ID and hops."
+        required: true
+        schema:
+          $ref: "#/definitions/Route"
+      responses:
+        200:
+          description: "Success."
+        400:
+          description: "Invalid parameters supplied."
 definitions:
   VNFType:
     type: "object"
@@ -313,6 +360,9 @@ definitions:
             id:
               type: "integer"
               format: ":int64"
+    example:
+      sfcr_id: 7
+      hops: [{"type": "Node", "id": "3"}, {"type": "VNFInstance", "id": "6"}, {"type": "Node", "id": "5"}]
   VNFFlavor:
     type: "object"
     properties:

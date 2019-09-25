@@ -162,6 +162,55 @@ paths:
         400:
           description: "Invalid parameters supplied."
       x-swagger-router-controller: "swagger_server.controllers.actions_controller"
+  /shutdown:
+    post:
+      tags:
+      - "actions"
+      summary: "Shut down a VNF instance."
+      description: ""
+      operationId: "shutdown_vnf"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "ID of VNF instance to be shut down."
+        required: true
+        schema:
+          type: "integer"
+          format: "int64"
+      responses:
+        200:
+          description: "Success."
+        400:
+          description: "Invalid parameters supplied."
+      x-swagger-router-controller: "swagger_server.controllers.actions_controller"
+  /setRoute:
+    post:
+      tags:
+      - "actions"
+      summary: "Route a request via the provided route."
+      description: ""
+      operationId: "set_route"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Route information including SFCR ID and hops."
+        required: true
+        schema:
+          $ref: "#/definitions/Route"
+      responses:
+        200:
+          description: "Success."
+        400:
+          description: "Invalid parameters supplied."
+      x-swagger-router-controller: "swagger_server.controllers.actions_controller"
 definitions:
   VNFType:
     type: "object"
@@ -355,12 +404,14 @@ definitions:
           $ref: "#/definitions/Route_hops"
     description: "Detailed routing information for a given SFCR ID."
     example:
+      sfcr_id: 7
       hops:
-      - id: 6
-        type: "type"
-      - id: 6
-        type: "type"
-      sfcr_id: 0
+      - type: "Node"
+        id: "3"
+      - type: "VNFInstance"
+        id: "6"
+      - type: "Node"
+        id: "5"
   VNFFlavor:
     type: "object"
     properties:
@@ -403,9 +454,6 @@ definitions:
       id:
         type: "integer"
         format: ":int64"
-    example:
-      id: 6
-      type: "type"
 externalDocs:
   description: "Find out more about DPNM NI."
   url: "http://dpnm.postech.ac.kr/"

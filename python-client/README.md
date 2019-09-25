@@ -70,6 +70,8 @@ All URIs are relative to *http://localhost:8080/v2*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *ActionsApi* | [**deploy_vnf**](docs/ActionsApi.md#deploy_vnf) | **POST** /deploy | Instantiate an instance of a VNF flavor on a given node.
+*ActionsApi* | [**set_route**](docs/ActionsApi.md#set_route) | **POST** /setRoute | Route a request via the provided route.
+*ActionsApi* | [**shutdown_vnf**](docs/ActionsApi.md#shutdown_vnf) | **POST** /shutdown | Shut down a VNF instance.
 *InfoApi* | [**get_placement**](docs/InfoApi.md#get_placement) | **GET** /placement | Get current placement information, i.e., list of all active VNF instances including their location.
 *InfoApi* | [**get_requests**](docs/InfoApi.md#get_requests) | **GET** /requests | Get currently active SFC requests.
 *InfoApi* | [**get_routes**](docs/InfoApi.md#get_routes) | **GET** /routes | Get current route information, i.e., list of all active SFCRs including their paths.
