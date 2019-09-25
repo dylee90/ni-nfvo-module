@@ -1,18 +1,24 @@
 from __future__ import print_function
 import datetime
-import time
-import swagger_client as swagc
-from swagger_client.rest import ApiException
+
 from pprint import pprint
 
+import nfvo_module_client.swagger_client_nfvo as swagc_nfvo
+import ai_module_client.swagger_client_ai as swagc_ai
+
+from nfvo_module_client.swagger_client_nfvo.rest import ApiException
+
+pprint(swagc_nfvo.Topology())
+pprint(swagc_ai.Topology())
+
 # Create instances of the three API classes.
-cfg = swagc.Configuration()
-sfcr_api_instance = swagc.SfcrApi(swagc.ApiClient(cfg))
-info_api_instance = swagc.InfoApi(swagc.ApiClient(cfg))
-actions_api_instance = swagc.ActionsApi(swagc.ApiClient(cfg))
+cfg = swagc_nfvo.Configuration()
+sfcr_api_instance = swagc_nfvo.SfcrApi(swagc_nfvo.ApiClient(cfg))
+info_api_instance = swagc_nfvo.InfoApi(swagc_nfvo.ApiClient(cfg))
+actions_api_instance = swagc_nfvo.ActionsApi(swagc_nfvo.ApiClient(cfg))
 
 # SFC request to be added.
-sfcr = swagc.SFCR(
+sfcr = swagc_nfvo.SFCR(
     arrivaltime = datetime.datetime.now().isoformat("T") + "Z",
     src_ip = "10.0.0.1",
     dst_ip = "10.0.0.2",
@@ -49,8 +55,8 @@ except ApiException as e:
 ## actions
 
 # Body of deployment request.
-body = swagc.Body(
-        flavor = swagc.VNFFlavor(
+body = swagc_nfvo.Body(
+        flavor = swagc_nfvo.VNFFlavor(
             name = "firewall",
             capacity_mbps = 900,
             delay_us = 45,
