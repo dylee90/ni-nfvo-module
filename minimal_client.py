@@ -3,10 +3,10 @@ import datetime
 
 from pprint import pprint
 
-import nfvo_module_client.swagger_client_nfvo as swagc_nfvo
-import ai_module_client.swagger_client_ai as swagc_ai
+import module_client_nfvo.swagger_client_nfvo as swagc_nfvo
+import module_client_ai.swagger_client_ai as swagc_ai
 
-from nfvo_module_client.swagger_client_nfvo.rest import ApiException
+from module_client_nfvo.swagger_client_nfvo.rest import ApiException
 
 pprint(swagc_nfvo.Topology())
 pprint(swagc_ai.Topology())
