@@ -42,8 +42,11 @@ except ApiException as e:
 
 try:
     # Get current topology and VNF flavor information.
+
     topology = info_api_instance.get_topology()
     print("[ minimal_client ] Received topology: %s." % str(topology))
+    print("[ minimal_client ] Class of received topology: %s." % str(topology.__class__))
+
     flavors = info_api_instance.get_vnf_flavors()
     print("[ minimal_client ] Received VNF flavors: %s." % str(flavors))
     print("[ minimal_client ] Class of received items: %s." % str(flavors[0].__class__))
@@ -69,4 +72,3 @@ try:
     actions_api_instance.deploy_vnf(body)
 except ApiException as e:
     print("Exception when calling ActionsApi->deploy_vnf: %s\n" % e)
-
