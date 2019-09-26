@@ -18,7 +18,8 @@ def deploy_vnf(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = Body.from_dict(connexion.request.get_json())  # noqa: E501
-        print("[ actions_controller ] Received deployment request: %s" % str(body))
+        print("[ actions_controller ] Received deployment request: %s.\n" % str(body))
+        print("[ actions_controller ] Deploying VNF %s on node id %d.\n" % (body.flavor.name, body.node))
     return 'do some magic!'
 
 

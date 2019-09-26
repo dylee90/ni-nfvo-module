@@ -1,6 +1,6 @@
 # swagger_client.SfcrApi
 
-All URIs are relative to *http://localhost:8080/v2*
+All URIs are relative to *http://localhost:8181/v2*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------

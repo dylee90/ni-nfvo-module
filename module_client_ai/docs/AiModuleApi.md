@@ -1,6 +1,6 @@
 # swagger_client.AiModuleApi
 
-All URIs are relative to *http://localhost:8080/v2*
+All URIs are relative to *http://localhost:8282/v2*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------

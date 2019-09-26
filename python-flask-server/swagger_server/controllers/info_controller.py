@@ -8,6 +8,8 @@ from swagger_server.models.vnf_flavor import VNFFlavor  # noqa: E501
 from swagger_server.models.vnf_instance import VNFInstance  # noqa: E501
 from swagger_server import util
 
+from swagger_server.controllers.sfcr_controller import get_active_requests
+
 
 def get_placement():  # noqa: E501
     """Get current placement information, i.e., list of all active VNF instances including their location.
@@ -28,7 +30,7 @@ def get_requests():  # noqa: E501
 
     :rtype: List[SFCR]
     """
-    return 'do some magic!'
+    return get_active_requests()
 
 
 def get_routes():  # noqa: E501

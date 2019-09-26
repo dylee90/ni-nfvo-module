@@ -24,6 +24,7 @@ Provides interfaces to the main functionalities and data of the Tacker NFVO.
 
 ### Usage Instructions
 
+- Set the `PYTHONPATH` environment variable to point to the location of this folder as well as the subfolders with module APIs that are used, e.g., `export PYTHONPATH=/mnt/e/git/nfvo-module:/mnt/e/git/nfvo-module/module_client_ai`.
 - Start server locally by calling `python3 -m swagger_server` in `python-flask-server`.
 - For the exemplary `minimal_client.py`, either copy and run the file in the `python-client` folder or add said folder to your `PYTHONPATH` environment variable prior to running it (e.g., `export PYTHONPATH=/mnt/e/git/nfvo-module/python-client`, `python3 minimal_client.py`).
 

@@ -2,7 +2,7 @@
 # import pkgutil
 # __path__ = pkgutil.extend_path(__path__, __name__)
 
-print("[ init ai ]")
+print("[ init ai client api ]")
 
 # from . import swagger_client
 

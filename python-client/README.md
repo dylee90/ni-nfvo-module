@@ -65,7 +65,7 @@ except ApiException as e:
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://localhost:8080/v2*
+All URIs are relative to *http://localhost:8181/v2*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------

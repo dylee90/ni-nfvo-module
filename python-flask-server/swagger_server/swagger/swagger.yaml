@@ -4,7 +4,7 @@ info:
   description: "NFVO module service for the NI project."
   version: "1.0.0"
   title: "NFVO Module Service"
-host: "localhost:8080"
+host: "localhost:8181"
 basePath: "/v2"
 tags:
 - name: "nfvo_module"
