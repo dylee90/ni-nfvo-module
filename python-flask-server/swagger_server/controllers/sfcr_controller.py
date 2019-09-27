@@ -15,9 +15,12 @@ def get_active_requests():
 def notify_ai_module():
     # Small delay to highlight the order of events.
     time.sleep(1)
-    cfg = swagc_ai.Configuration()
-    sfcr_api_instance = swagc_ai.AiModuleApi(swagc_ai.ApiClient(cfg))
-    sfcr_api_instance.sfcr_event()
+    try:
+        cfg = swagc_ai.Configuration()
+        sfcr_api_instance = swagc_ai.AiModuleApi(swagc_ai.ApiClient(cfg))
+        sfcr_api_instance.sfcr_event()
+    except Exception  as e:
+        print("[ sfcr_controller ] Error: %s.\n" % e)
 
 
 def add_sfcr(body):  # noqa: E501

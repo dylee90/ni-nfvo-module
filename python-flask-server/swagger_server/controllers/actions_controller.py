@@ -11,9 +11,12 @@ import module_client_trafgen.swagger_client_trafgen as swagc_trafgen
 
 def notify_trafgen(sfcr):
     print("[ actions_controller ] Finished infrastructure setup, notifying trafgen.\n")
-    cfg = swagc_trafgen.Configuration()
-    trafgen_api_instance = swagc_trafgen.TrafgenApi(swagc_trafgen.ApiClient(cfg))
-    trafgen_api_instance.add_sfcr(sfcr)
+    try:
+        cfg = swagc_trafgen.Configuration()
+        trafgen_api_instance = swagc_trafgen.TrafgenApi(swagc_trafgen.ApiClient(cfg))
+        trafgen_api_instance.add_sfcr(sfcr)
+    except Exception  as e:
+        print("[ action_controller ] Error: %s.\n" % e)
 
 
 def deploy_vnf(body):  # noqa: E501
@@ -30,9 +33,12 @@ def deploy_vnf(body):  # noqa: E501
         body = Body.from_dict(connexion.request.get_json())  # noqa: E501
         print("[ actions_controller ] Received deployment request: %s.\n" % str(body))
         print("[ actions_controller ] Deploying VNF %s on node id %d.\n" % (body.flavor.name, body.node))
-        current_sfcr = get_active_requests()[-1]
-        t = Timer(3, notify_trafgen, [current_sfcr])
-        t.start()
+        try:
+            current_sfcr = get_active_requests()[-1]
+            t = Timer(3, notify_trafgen, [current_sfcr])
+            t.start()
+        except Exception as e:
+            print("[ actions_controller ] Error: %s.\n" % e)
     return 'do some magic!'
 
 
