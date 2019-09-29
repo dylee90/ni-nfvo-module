@@ -40,5 +40,8 @@ def create_server(flavor_id, host_name):
     req = requests.post("{}{}".format(base_url, url),
         json=data,
         headers=headers)
-    print(req.json())
-    return req.reason, req.status_code
+    # if req is accepted (202), then return ID of server with success code (200)
+    if req.status_code == 202:
+        return req.json()["server"]["id"], 200
+    else:
+        return req.json(), req.status_code
