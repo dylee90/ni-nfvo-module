@@ -18,6 +18,7 @@ def notify_trafgen(sfcr):
     except Exception  as e:
         print("[ action_controller ] Error: %s.\n" % e)
 
+from swagger_server.backend_clients.server import create_server
 
 def deploy_vnf(body):  # noqa: E501
     """Instantiate an instance of a VNF flavor on a given node.
@@ -29,6 +30,7 @@ def deploy_vnf(body):  # noqa: E501
 
     :rtype: None
     """
+
     if connexion.request.is_json:
         body = Body.from_dict(connexion.request.get_json())  # noqa: E501
         print("[ actions_controller ] Received deployment request: %s.\n" % str(body))
@@ -39,7 +41,8 @@ def deploy_vnf(body):  # noqa: E501
             t.start()
         except Exception as e:
             print("[ actions_controller ] Error: %s.\n" % e)
-    return 'do some magic!'
+
+    return create_server(flavor_id=body.flavor.id, host_name=body.node)
 
 
 def set_route(body):  # noqa: E501
