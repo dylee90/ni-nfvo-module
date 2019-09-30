@@ -45,3 +45,23 @@ def create_server(flavor_id, host_name):
         return req.json()["server"]["id"], 200
     else:
         return req.json(), req.status_code
+
+def stop_server(server_id):
+    rset_auth_info()
+
+    base_url = _base_urls["compute"]
+    url = "/servers/{}/action".format(server_id)
+    headers = {'X-Auth-Token': _client.auth_token}
+
+    data = {
+                "os-stop" : "dummy"
+            }
+
+    req = requests.post("{}{}".format(base_url, url),
+        json=data,
+        headers=headers)
+
+    if req.status_code == 202:
+        return "Success", 200
+    else:
+        return req.json(), req.status_code

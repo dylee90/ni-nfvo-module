@@ -6,6 +6,7 @@ from flask import json
 from six import BytesIO
 
 from swagger_server.models.body import Body  # noqa: E501
+from swagger_server.models.body1 import Body1  # noqa: E501
 from swagger_server.models.route import Route  # noqa: E501
 from swagger_server.test import BaseTestCase
 
@@ -46,7 +47,7 @@ class TestActionsController(BaseTestCase):
 
         Shut down a VNF instance.
         """
-        body = 789
+        body = Body1()
         response = self.client.open(
             '/v2/shutdown',
             method='POST',

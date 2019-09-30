@@ -3,10 +3,13 @@ import six
 from threading import Timer
 
 from swagger_server.models.body import Body  # noqa: E501
+from swagger_server.models.body1 import Body1  # noqa: E501
 from swagger_server.models.route import Route  # noqa: E501
 from swagger_server import util
 from swagger_server.controllers.sfcr_controller import get_active_requests
 import module_client_trafgen.swagger_client_trafgen as swagc_trafgen
+
+from swagger_server.backend_clients.server import create_server, stop_server
 
 
 def notify_trafgen(sfcr):
@@ -18,7 +21,6 @@ def notify_trafgen(sfcr):
     except Exception  as e:
         print("[ action_controller ] Error: %s.\n" % e)
 
-from swagger_server.backend_clients.server import create_server
 
 def deploy_vnf(body):  # noqa: E501
     """Instantiate an instance of a VNF flavor on a given node.
@@ -66,8 +68,10 @@ def shutdown_vnf(body):  # noqa: E501
      # noqa: E501
 
     :param body: ID of VNF instance to be shut down.
-    :type body: int
+    :type body: dict | bytes
 
     :rtype: None
     """
-    return 'do some magic!'
+    if connexion.request.is_json:
+        body = Body1.from_dict(connexion.request.get_json())  # noqa: E501
+    return stop_server(body.vnf_instance_id)
