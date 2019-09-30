@@ -181,7 +181,7 @@ paths:
         description: "ID of VNF instance to be shut down."
         required: true
         schema:
-          $ref: "#/definitions/body_1"
+          $ref: "#/definitions/Shutdown"
       responses:
         200:
           description: "Success."
@@ -412,6 +412,14 @@ definitions:
         id: "6"
       - type: "Node"
         id: "5"
+  Shutdown:
+    type: "object"
+    properties:
+      vnf_instance_id:
+        type: "string"
+    description: "vnf instance id to shutdown."
+    example:
+      vnf_instance_id: "vnf_instance_id"
   VNFFlavor:
     type: "object"
     properties:
@@ -444,11 +452,6 @@ definitions:
       flavor:
         $ref: "#/definitions/VNFFlavor"
       node_name:
-        type: "string"
-  body_1:
-    type: "object"
-    properties:
-      vnf_instance_id:
         type: "string"
   Route_hops:
     properties:

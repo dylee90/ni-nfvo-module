@@ -3,7 +3,7 @@ import six
 from threading import Timer
 
 from swagger_server.models.body import Body  # noqa: E501
-from swagger_server.models.body1 import Body1  # noqa: E501
+from swagger_server.models.shutdown import Shutdown  # noqa: E501
 from swagger_server.models.route import Route  # noqa: E501
 from swagger_server import util
 from swagger_server.controllers.sfcr_controller import get_active_requests
@@ -73,5 +73,5 @@ def shutdown_vnf(body):  # noqa: E501
     :rtype: None
     """
     if connexion.request.is_json:
-        body = Body1.from_dict(connexion.request.get_json())  # noqa: E501
+        body = Shutdown.from_dict(connexion.request.get_json())  # noqa: E501
     return stop_server(body.vnf_instance_id)
