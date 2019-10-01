@@ -188,7 +188,7 @@ paths:
       parameters:
       - in: "body"
         name: "body"
-        description: "Route information including SFCR ID and hops."
+        description: "Route information including SFCR ID and vnf instance ids."
         required: true
         schema:
           $ref: "#/definitions/Route"
@@ -347,20 +347,10 @@ definitions:
       sfcr_id:
         type: "integer"
         format: "int64"
-      hops:
+      vnf_instance_ids:
         type: "array"
         items:
-          type: "object"
-          properties:
-            type:
-              description: "Node or VNFInstance."
-              type: "string"
-            id:
-              type: "integer"
-              format: ":int64"
-    example:
-      sfcr_id: 7
-      hops: [{"type": "Node", "id": "3"}, {"type": "VNFInstance", "id": "6"}, {"type": "Node", "id": "5"}]
+          type: "string"
 
   Shutdown:
     description: "vnf instance id to shutdown."
