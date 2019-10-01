@@ -15,11 +15,11 @@ class Node(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, id: int=None, ip: str=None, n_cores: int=None, core_frequency: int=None, ram: int=None, ram_frequency: int=None):  # noqa: E501
+    def __init__(self, name: str=None, ip: str=None, n_cores: int=None, core_frequency: int=None, ram: int=None, ram_frequency: int=None):  # noqa: E501
         """Node - a model defined in Swagger
 
-        :param id: The id of this Node.  # noqa: E501
-        :type id: int
+        :param name: The name of this Node.  # noqa: E501
+        :type name: str
         :param ip: The ip of this Node.  # noqa: E501
         :type ip: str
         :param n_cores: The n_cores of this Node.  # noqa: E501
@@ -32,7 +32,7 @@ class Node(Model):
         :type ram_frequency: int
         """
         self.swagger_types = {
-            'id': int,
+            'name': str,
             'ip': str,
             'n_cores': int,
             'core_frequency': int,
@@ -41,7 +41,7 @@ class Node(Model):
         }
 
         self.attribute_map = {
-            'id': 'id',
+            'name': 'name',
             'ip': 'ip',
             'n_cores': 'n_cores',
             'core_frequency': 'core_frequency',
@@ -49,7 +49,7 @@ class Node(Model):
             'ram_frequency': 'ram_frequency'
         }
 
-        self._id = id
+        self._name = name
         self._ip = ip
         self._n_cores = n_cores
         self._core_frequency = core_frequency
@@ -68,25 +68,25 @@ class Node(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def id(self) -> int:
-        """Gets the id of this Node.
+    def name(self) -> str:
+        """Gets the name of this Node.
 
 
-        :return: The id of this Node.
-        :rtype: int
+        :return: The name of this Node.
+        :rtype: str
         """
-        return self._id
+        return self._name
 
-    @id.setter
-    def id(self, id: int):
-        """Sets the id of this Node.
+    @name.setter
+    def name(self, name: str):
+        """Sets the name of this Node.
 
 
-        :param id: The id of this Node.
-        :type id: int
+        :param name: The name of this Node.
+        :type name: str
         """
 
-        self._id = id
+        self._name = name
 
     @property
     def ip(self) -> str:

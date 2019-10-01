@@ -3,10 +3,13 @@ import six
 from threading import Timer
 
 from swagger_server.models.body import Body  # noqa: E501
+from swagger_server.models.shutdown import Shutdown  # noqa: E501
 from swagger_server.models.route import Route  # noqa: E501
 from swagger_server import util
 from swagger_server.controllers.sfcr_controller import get_active_requests
 import module_client_trafgen.swagger_client_trafgen as swagc_trafgen
+
+from swagger_server.backend_clients.server import create_server, stop_server
 
 
 def notify_trafgen(sfcr):
@@ -29,17 +32,19 @@ def deploy_vnf(body):  # noqa: E501
 
     :rtype: None
     """
+
     if connexion.request.is_json:
         body = Body.from_dict(connexion.request.get_json())  # noqa: E501
         print("[ actions_controller ] Received deployment request: %s.\n" % str(body))
-        print("[ actions_controller ] Deploying VNF %s on node id %d.\n" % (body.flavor.name, body.node))
+        print("[ actions_controller ] Deploying VNF %s on node id %s.\n" % (body.flavor.name, body.node_name))
         try:
             current_sfcr = get_active_requests()[-1]
             t = Timer(3, notify_trafgen, [current_sfcr])
             t.start()
         except Exception as e:
             print("[ actions_controller ] Error: %s.\n" % e)
-    return 'do some magic!'
+
+    return create_server(flavor_id=body.flavor.id, host_name=body.node_name)
 
 
 def set_route(body):  # noqa: E501
@@ -63,8 +68,10 @@ def shutdown_vnf(body):  # noqa: E501
      # noqa: E501
 
     :param body: ID of VNF instance to be shut down.
-    :type body: int
+    :type body: dict | bytes
 
     :rtype: None
     """
-    return 'do some magic!'
+    if connexion.request.is_json:
+        body = Shutdown.from_dict(connexion.request.get_json())  # noqa: E501
+    return stop_server(body.vnf_instance_id)

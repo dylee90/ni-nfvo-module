@@ -143,12 +143,13 @@ paths:
           properties:
             flavor:
               $ref: "#/definitions/VNFFlavor"
-            node:
-              type: "integer"
-              format: "int64"
+            node_name:
+              type: "string"
       responses:
         200:
           description: "Success."
+          schema:
+            type: "string"
         400:
           description: "Invalid parameters supplied."
   /shutdown:
@@ -168,8 +169,7 @@ paths:
         description: "ID of VNF instance to be shut down."
         required: true
         schema:
-          type: "integer"
-          format: "int64"
+          $ref: "#/definitions/Shutdown"
       responses:
         200:
           description: "Success."
@@ -253,9 +253,8 @@ definitions:
   Node:
     type: "object"
     properties:
-      id:
-        type: "integer"
-        format: "int64"
+      name:
+        type: "string"
       ip:
         type: "string"
       n_cores:
@@ -363,6 +362,14 @@ definitions:
     example:
       sfcr_id: 7
       hops: [{"type": "Node", "id": "3"}, {"type": "VNFInstance", "id": "6"}, {"type": "Node", "id": "5"}]
+
+  Shutdown:
+    description: "vnf instance id to shutdown."
+    type: "object"
+    properties:
+      vnf_instance_id:
+        type: "string"
+
   VNFFlavor:
     type: "object"
     properties:

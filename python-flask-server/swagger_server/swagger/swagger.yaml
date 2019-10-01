@@ -159,6 +159,8 @@ paths:
       responses:
         200:
           description: "Success."
+          schema:
+            type: "string"
         400:
           description: "Invalid parameters supplied."
       x-swagger-router-controller: "swagger_server.controllers.actions_controller"
@@ -179,8 +181,7 @@ paths:
         description: "ID of VNF instance to be shut down."
         required: true
         schema:
-          type: "integer"
-          format: "int64"
+          $ref: "#/definitions/Shutdown"
       responses:
         200:
           description: "Success."
@@ -286,9 +287,8 @@ definitions:
   Node:
     type: "object"
     properties:
-      id:
-        type: "integer"
-        format: "int64"
+      name:
+        type: "string"
       ip:
         type: "string"
       n_cores:
@@ -412,6 +412,14 @@ definitions:
         id: "6"
       - type: "Node"
         id: "5"
+  Shutdown:
+    type: "object"
+    properties:
+      vnf_instance_id:
+        type: "string"
+    description: "vnf instance id to shutdown."
+    example:
+      vnf_instance_id: "vnf_instance_id"
   VNFFlavor:
     type: "object"
     properties:
@@ -443,9 +451,8 @@ definitions:
     properties:
       flavor:
         $ref: "#/definitions/VNFFlavor"
-      node:
-        type: "integer"
-        format: "int64"
+      node_name:
+        type: "string"
   Route_hops:
     properties:
       type:

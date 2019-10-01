@@ -7,6 +7,7 @@ from six import BytesIO
 
 from swagger_server.models.body import Body  # noqa: E501
 from swagger_server.models.route import Route  # noqa: E501
+from swagger_server.models.shutdown import Shutdown  # noqa: E501
 from swagger_server.test import BaseTestCase
 
 
@@ -46,7 +47,7 @@ class TestActionsController(BaseTestCase):
 
         Shut down a VNF instance.
         """
-        body = 789
+        body = Shutdown()
         response = self.client.open(
             '/v2/shutdown',
             method='POST',

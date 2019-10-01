@@ -16,26 +16,26 @@ class Body(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, flavor: VNFFlavor=None, node: int=None):  # noqa: E501
+    def __init__(self, flavor: VNFFlavor=None, node_name: str=None):  # noqa: E501
         """Body - a model defined in Swagger
 
         :param flavor: The flavor of this Body.  # noqa: E501
         :type flavor: VNFFlavor
-        :param node: The node of this Body.  # noqa: E501
-        :type node: int
+        :param node_name: The node_name of this Body.  # noqa: E501
+        :type node_name: str
         """
         self.swagger_types = {
             'flavor': VNFFlavor,
-            'node': int
+            'node_name': str
         }
 
         self.attribute_map = {
             'flavor': 'flavor',
-            'node': 'node'
+            'node_name': 'node_name'
         }
 
         self._flavor = flavor
-        self._node = node
+        self._node_name = node_name
 
     @classmethod
     def from_dict(cls, dikt) -> 'Body':
@@ -70,22 +70,22 @@ class Body(Model):
         self._flavor = flavor
 
     @property
-    def node(self) -> int:
-        """Gets the node of this Body.
+    def node_name(self) -> str:
+        """Gets the node_name of this Body.
 
 
-        :return: The node of this Body.
-        :rtype: int
+        :return: The node_name of this Body.
+        :rtype: str
         """
-        return self._node
+        return self._node_name
 
-    @node.setter
-    def node(self, node: int):
-        """Sets the node of this Body.
+    @node_name.setter
+    def node_name(self, node_name: str):
+        """Sets the node_name of this Body.
 
 
-        :param node: The node of this Body.
-        :type node: int
+        :param node_name: The node_name of this Body.
+        :type node_name: str
         """
 
-        self._node = node
+        self._node_name = node_name
