@@ -6,7 +6,6 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from nfvo_server.models.base_model_ import Model
-from nfvo_server.models.route_hops import RouteHops  # noqa: F401,E501
 from nfvo_server import util
 
 
@@ -16,26 +15,26 @@ class Route(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, sfcr_id: int=None, hops: List[RouteHops]=None):  # noqa: E501
+    def __init__(self, sfcr_id: int=None, vnf_instance_ids: List[str]=None):  # noqa: E501
         """Route - a model defined in Swagger
 
         :param sfcr_id: The sfcr_id of this Route.  # noqa: E501
         :type sfcr_id: int
-        :param hops: The hops of this Route.  # noqa: E501
-        :type hops: List[RouteHops]
+        :param vnf_instance_ids: The vnf_instance_ids of this Route.  # noqa: E501
+        :type vnf_instance_ids: List[str]
         """
         self.swagger_types = {
             'sfcr_id': int,
-            'hops': List[RouteHops]
+            'vnf_instance_ids': List[str]
         }
 
         self.attribute_map = {
             'sfcr_id': 'sfcr_id',
-            'hops': 'hops'
+            'vnf_instance_ids': 'vnf_instance_ids'
         }
 
         self._sfcr_id = sfcr_id
-        self._hops = hops
+        self._vnf_instance_ids = vnf_instance_ids
 
     @classmethod
     def from_dict(cls, dikt) -> 'Route':
@@ -70,22 +69,22 @@ class Route(Model):
         self._sfcr_id = sfcr_id
 
     @property
-    def hops(self) -> List[RouteHops]:
-        """Gets the hops of this Route.
+    def vnf_instance_ids(self) -> List[str]:
+        """Gets the vnf_instance_ids of this Route.
 
 
-        :return: The hops of this Route.
-        :rtype: List[RouteHops]
+        :return: The vnf_instance_ids of this Route.
+        :rtype: List[str]
         """
-        return self._hops
+        return self._vnf_instance_ids
 
-    @hops.setter
-    def hops(self, hops: List[RouteHops]):
-        """Sets the hops of this Route.
+    @vnf_instance_ids.setter
+    def vnf_instance_ids(self, vnf_instance_ids: List[str]):
+        """Sets the vnf_instance_ids of this Route.
 
 
-        :param hops: The hops of this Route.
-        :type hops: List[RouteHops]
+        :param vnf_instance_ids: The vnf_instance_ids of this Route.
+        :type vnf_instance_ids: List[str]
         """
 
-        self._hops = hops
+        self._vnf_instance_ids = vnf_instance_ids
