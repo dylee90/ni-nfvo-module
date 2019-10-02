@@ -21,7 +21,10 @@ def create_server(flavor_id, host_name):
                     "imageRef" : vnf_cfg["base_image_id"],
                     "flavorRef" : flavor_id,
                     "availability_zone": "nova:{}".format(host_name),
-                    "networks": [{"uuid": vnf_cfg["network_uuid"]},],
+                    "networks": [
+                        {"uuid": vnf_cfg["data_net_id"]},
+                        {"uuid": vnf_cfg["mgmt_net_id"]},
+                    ],
                 }
             }
 
