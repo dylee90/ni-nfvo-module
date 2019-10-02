@@ -9,7 +9,6 @@ from nfvo_server.models.link import Link
 from nfvo_server.models.monitoring_entry import MonitoringEntry
 from nfvo_server.models.node import Node
 from nfvo_server.models.route import Route
-from nfvo_server.models.route_hops import RouteHops
 from nfvo_server.models.sfcr import SFCR
 from nfvo_server.models.shutdown import Shutdown
 from nfvo_server.models.topology import Topology

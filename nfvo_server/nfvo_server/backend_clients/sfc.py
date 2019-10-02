@@ -5,11 +5,11 @@ import uuid
 from nfvo_server.config import cfg
 from nfvo_server.backend_clients.utils import openstack_client as client
 
-vnf_cfg = cfg["openstack_client"]["vnf"]
 
-
-def create_server(flavor_id, host_name):
+def create_sfc(vnf_ids):
     client.rset_auth_info()
+    for vnf_id in vnf_ids:
+        print(get_port_of_server(vnf_id))
 
     base_url = client.base_urls["compute"]
     url = "/servers"
@@ -34,22 +34,13 @@ def create_server(flavor_id, host_name):
     else:
         return req.json(), req.status_code
 
-def stop_server(server_id):
+def get_port_of_server(vnf_instance_id):
     client.rset_auth_info()
 
-    base_url = client.base_urls["compute"]
-    url = "/servers/{}/action".format(server_id)
-    headers = {'X-Auth-Token': client.client.auth_token}
-
-    data = {
-                "os-stop" : "dummy"
-            }
-
-    req = requests.post("{}{}".format(base_url, url),
-        json=data,
+    # FIXME: why networking API missing v2.0 text???
+    base_url = "{}v2.0".format(client.base_urls["network"])
+    url = "/networks?device_id={}".format(vnf_instance_id)
+    headers = {'X-Auth-Token': _client.auth_token}
+    req = requests.get("{}{}".format(base_url, url),
         headers=headers)
-
-    if req.status_code == 202:
-        return "Success", 200
-    else:
-        return req.json(), req.status_code
+    return req.json()

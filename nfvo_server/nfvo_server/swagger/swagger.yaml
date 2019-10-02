@@ -201,7 +201,7 @@ paths:
       parameters:
       - in: "body"
         name: "body"
-        description: "Route information including SFCR ID and hops."
+        description: "Route information including SFCR ID and vnf instance ids."
         required: true
         schema:
           $ref: "#/definitions/Route"
@@ -397,20 +397,16 @@ definitions:
       sfcr_id:
         type: "integer"
         format: "int64"
-      hops:
+      vnf_instance_ids:
         type: "array"
         items:
-          $ref: "#/definitions/Route_hops"
+          type: "string"
     description: "Detailed routing information for a given SFCR ID."
     example:
-      sfcr_id: 7
-      hops:
-      - type: "Node"
-        id: "3"
-      - type: "VNFInstance"
-        id: "6"
-      - type: "Node"
-        id: "5"
+      vnf_instance_ids:
+      - "vnf_instance_ids"
+      - "vnf_instance_ids"
+      sfcr_id: 0
   Shutdown:
     type: "object"
     properties:
@@ -452,14 +448,6 @@ definitions:
         $ref: "#/definitions/VNFFlavor"
       node_name:
         type: "string"
-  Route_hops:
-    properties:
-      type:
-        type: "string"
-        description: "Node or VNFInstance."
-      id:
-        type: "integer"
-        format: ":int64"
 externalDocs:
   description: "Find out more about DPNM NI."
   url: "http://dpnm.postech.ac.kr/"
