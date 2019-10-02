@@ -2,16 +2,15 @@ import connexion
 import six
 from threading import Timer
 
-from swagger_server.models.body import Body  # noqa: E501
-from swagger_server.models.shutdown import Shutdown  # noqa: E501
-from swagger_server.models.route import Route  # noqa: E501
-from swagger_server import util
-from swagger_server.controllers.sfcr_controller import get_active_requests
-# import module_client_trafgen.swagger_client_trafgen as swagc_trafgen
+from nfvo_server.models.body import Body  # noqa: E501
+from nfvo_server.models.route import Route  # noqa: E501
+from nfvo_server.models.shutdown import Shutdown  # noqa: E501
+from nfvo_server import util
+
+from nfvo_server.controllers.sfcr_controller import get_active_requests
+from nfvo_server.backend_clients.server import create_server, stop_server
+
 import trafgen_module_client as swagc_trafgen
-
-from swagger_server.backend_clients.server import create_server, stop_server
-
 
 def notify_trafgen(sfcr):
     print("[ actions_controller ] Finished infrastructure setup, notifying trafgen.\n")
@@ -22,7 +21,6 @@ def notify_trafgen(sfcr):
     except Exception  as e:
         print("[ action_controller ] Error: %s.\n" % e)
 
-
 def deploy_vnf(body):  # noqa: E501
     """Instantiate an instance of a VNF flavor on a given node.
 
@@ -31,9 +29,8 @@ def deploy_vnf(body):  # noqa: E501
     :param body: Flavor of VNF instance to be deployed as well as the target node.
     :type body: dict | bytes
 
-    :rtype: None
+    :rtype: str
     """
-
     if connexion.request.is_json:
         body = Body.from_dict(connexion.request.get_json())  # noqa: E501
         print("[ actions_controller ] Received deployment request: %s.\n" % str(body))

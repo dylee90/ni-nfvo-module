@@ -1,0 +1,12 @@
+openstack_client:
+  auth:
+    auth_url: "http://<openstack_controller_address>/identity/v3"
+    username: "admin"
+    password: <password>
+    project_name: "demo"
+    user_domain_id: "default"
+    project_domain_id: "default"
+
+  vnf:
+    base_image_id: "22f77490-8beb-47d9-a088-35bad1542da3"
+    network_uuid: "7263d7be-2f5f-4107-89e0-d3f34b89efb6"

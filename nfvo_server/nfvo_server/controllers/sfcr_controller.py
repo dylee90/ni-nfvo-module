@@ -2,16 +2,18 @@ import connexion
 import six
 import time
 
-from swagger_server.models.sfcr import SFCR  # noqa: E501
-# import module_client_ai.swagger_client_ai as swagc_ai
+from nfvo_server.models.sfcr import SFCR  # noqa: E501
+from nfvo_server import util
+
 import ai_module_client as swagc_ai
-from swagger_server import util
 
 active_requests = []
+
 
 def get_active_requests():
     global active_requests
     return active_requests
+
 
 def notify_ai_module():
     # Small delay to highlight the order of events.

@@ -3,13 +3,11 @@ import datetime
 
 from pprint import pprint
 
-import module_client_nfvo.swagger_client_nfvo as swagc_nfvo
-import module_client_ai.swagger_client_ai as swagc_ai
+import nfvo_module_client as swagc_nfvo
 
-from module_client_nfvo.swagger_client_nfvo.rest import ApiException
+from nfvo_module_client.rest import ApiException
 
 pprint(swagc_nfvo.Topology())
-pprint(swagc_ai.Topology())
 
 # Create instances of the three API classes.
 cfg = swagc_nfvo.Configuration()
@@ -65,7 +63,10 @@ body = swagc_nfvo.Body(
             delay_us = 45,
             n_cores = 4,
             ram_mb = 1024),
-        node = "7")
+        node_name = "7")
+
+print(body)
+print(body.__class__)
 
 try:
     # Instantiate an instance of a VNF flavor on a given node.

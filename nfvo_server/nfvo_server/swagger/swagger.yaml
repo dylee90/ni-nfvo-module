@@ -1,0 +1,465 @@
+---
+swagger: "2.0"
+info:
+  description: "NFVO module service for the NI project."
+  version: "1.0.0"
+  title: "NFVO Module Service"
+basePath: "/v2"
+tags:
+- name: "nfvo_module"
+  description: "Provides interfaces to the main functionalities and data of the Tacker\
+    \ NFVO."
+schemes:
+- "http"
+paths:
+  /sfcr:
+    post:
+      tags:
+      - "sfcr"
+      summary: "Add new SFC request."
+      description: ""
+      operationId: "add_sfcr"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "SFC request object to be added."
+        required: true
+        schema:
+          $ref: "#/definitions/SFCR"
+      responses:
+        200:
+          description: "Success."
+        400:
+          description: "Invalid SFC request parameters supplied."
+      x-swagger-router-controller: "nfvo_server.controllers.sfcr_controller"
+  /topology:
+    get:
+      tags:
+      - "info"
+      summary: "Get current topology information."
+      description: ""
+      operationId: "get_topology"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "Success."
+          schema:
+            $ref: "#/definitions/Topology"
+      x-swagger-router-controller: "nfvo_server.controllers.info_controller"
+  /placement:
+    get:
+      tags:
+      - "info"
+      summary: "Get current placement information, i.e., list of all active VNF instances\
+        \ including their location."
+      description: ""
+      operationId: "get_placement"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "Success."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/VNFInstance"
+      x-swagger-router-controller: "nfvo_server.controllers.info_controller"
+  /routes:
+    get:
+      tags:
+      - "info"
+      summary: "Get current route information, i.e., list of all active SFCRs including\
+        \ their paths."
+      description: ""
+      operationId: "get_routes"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "Success."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Route"
+      x-swagger-router-controller: "nfvo_server.controllers.info_controller"
+  /requests:
+    get:
+      tags:
+      - "info"
+      summary: "Get currently active SFC requests."
+      description: ""
+      operationId: "get_requests"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "Success."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/SFCR"
+      x-swagger-router-controller: "nfvo_server.controllers.info_controller"
+  /vnfflavors:
+    get:
+      tags:
+      - "info"
+      summary: "Get available VNF flavors."
+      description: ""
+      operationId: "get_vnf_flavors"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "Success."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/VNFFlavor"
+      x-swagger-router-controller: "nfvo_server.controllers.info_controller"
+  /deploy:
+    post:
+      tags:
+      - "actions"
+      summary: "Instantiate an instance of a VNF flavor on a given node."
+      description: ""
+      operationId: "deploy_vnf"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Flavor of VNF instance to be deployed as well as the target\
+          \ node."
+        required: true
+        schema:
+          $ref: "#/definitions/body"
+      responses:
+        200:
+          description: "Success."
+          schema:
+            type: "string"
+        400:
+          description: "Invalid parameters supplied."
+      x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
+  /shutdown:
+    post:
+      tags:
+      - "actions"
+      summary: "Shut down a VNF instance."
+      description: ""
+      operationId: "shutdown_vnf"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "ID of VNF instance to be shut down."
+        required: true
+        schema:
+          $ref: "#/definitions/Shutdown"
+      responses:
+        200:
+          description: "Success."
+        400:
+          description: "Invalid parameters supplied."
+      x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
+  /setRoute:
+    post:
+      tags:
+      - "actions"
+      summary: "Route a request via the provided route."
+      description: ""
+      operationId: "set_route"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Route information including SFCR ID and hops."
+        required: true
+        schema:
+          $ref: "#/definitions/Route"
+      responses:
+        200:
+          description: "Success."
+        400:
+          description: "Invalid parameters supplied."
+      x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
+definitions:
+  VNFType:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      capacity:
+        type: "integer"
+        format: "int32"
+      delay:
+        type: "integer"
+        format: "int32"
+      n_cores:
+        type: "integer"
+        format: "int32"
+      ram:
+        type: "integer"
+        format: "int32"
+    example:
+      n_cores: 5
+      delay: 1
+      name: "name"
+      capacity: 6
+      ram: 5
+  SFCR:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      arrivaltime:
+        type: "string"
+        format: "date-time"
+      src_ip:
+        type: "string"
+      dst_ip:
+        type: "string"
+      src_port:
+        type: "integer"
+        format: "int32"
+      dst_port:
+        type: "integer"
+        format: "int32"
+      bw:
+        type: "integer"
+        format: "int32"
+      delay:
+        type: "integer"
+        format: "int32"
+      duration:
+        type: "integer"
+        format: "int32"
+      proto:
+        type: "string"
+      nf_chain:
+        type: "array"
+        items:
+          type: "string"
+    example:
+      src_ip: "src_ip"
+      src_port: 6
+      duration: 2
+      delay: 5
+      bw: 5
+      proto: "proto"
+      nf_chain:
+      - "nf_chain"
+      - "nf_chain"
+      arrivaltime: "2000-01-23T04:56:07.000+00:00"
+      dst_port: 1
+      id: 0
+      dst_ip: "dst_ip"
+  Node:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      ip:
+        type: "string"
+      n_cores:
+        type: "integer"
+        format: "int32"
+      core_frequency:
+        type: "integer"
+        format: "int32"
+      ram:
+        type: "integer"
+        format: "int32"
+      ram_frequency:
+        type: "integer"
+        format: "int32"
+  Link:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      node1_id:
+        type: "integer"
+        format: "int64"
+      node2_id:
+        type: "integer"
+        format: "int64"
+      delay:
+        type: "integer"
+        format: "int32"
+      bw:
+        type: "integer"
+        format: "int32"
+  Topology:
+    type: "object"
+    properties:
+      node_list:
+        type: "array"
+        items:
+          type: "integer"
+          format: "int64"
+      edge_list:
+        type: "array"
+        items:
+          type: "integer"
+          format: "int64"
+    example:
+      node_list:
+      - 0
+      - 0
+      edge_list:
+      - 6
+      - 6
+  MonitoringEntry:
+    type: "object"
+    properties:
+      timestamp:
+        type: "string"
+        format: "date-time"
+      component_type:
+        type: "string"
+      component_id:
+        type: "integer"
+        format: "int64"
+      measurement_type:
+        type: "string"
+      measurement_value:
+        type: "number"
+        format: "double"
+  VNFInstance:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      type:
+        $ref: "#/definitions/VNFType"
+      node_id:
+        type: "integer"
+        format: "int64"
+      ip:
+        type: "string"
+    example:
+      ip: "ip"
+      id: 0
+      type:
+        n_cores: 5
+        delay: 1
+        name: "name"
+        capacity: 6
+        ram: 5
+      node_id: 2
+  Assignment:
+    type: "object"
+    properties:
+      sfcr_id:
+        type: "integer"
+        format: "int64"
+      vnf_instace_ids:
+        type: "array"
+        items:
+          type: "integer"
+          format: "int64"
+    description: "Mapping between an SFCR and a list of VNF instances."
+  Route:
+    type: "object"
+    properties:
+      sfcr_id:
+        type: "integer"
+        format: "int64"
+      hops:
+        type: "array"
+        items:
+          $ref: "#/definitions/Route_hops"
+    description: "Detailed routing information for a given SFCR ID."
+    example:
+      sfcr_id: 7
+      hops:
+      - type: "Node"
+        id: "3"
+      - type: "VNFInstance"
+        id: "6"
+      - type: "Node"
+        id: "5"
+  Shutdown:
+    type: "object"
+    properties:
+      vnf_instance_id:
+        type: "string"
+    description: "vnf instance id to shutdown."
+    example:
+      vnf_instance_id: "vnf_instance_id"
+  VNFFlavor:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      name:
+        type: "string"
+      capacity_mbps:
+        type: "integer"
+        format: "int32"
+      delay_us:
+        type: "integer"
+        format: "int32"
+      n_cores:
+        type: "integer"
+        format: "int32"
+      ram_mb:
+        type: "integer"
+        format: "int32"
+    example:
+      n_cores: 1
+      ram_mb: 5
+      capacity_mbps: 0
+      name: "name"
+      id: "id"
+      delay_us: 6
+  body:
+    type: "object"
+    properties:
+      flavor:
+        $ref: "#/definitions/VNFFlavor"
+      node_name:
+        type: "string"
+  Route_hops:
+    properties:
+      type:
+        type: "string"
+        description: "Node or VNFInstance."
+      id:
+        type: "integer"
+        format: ":int64"
+externalDocs:
+  description: "Find out more about DPNM NI."
+  url: "http://dpnm.postech.ac.kr/"
