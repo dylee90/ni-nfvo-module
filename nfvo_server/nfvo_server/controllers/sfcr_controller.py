@@ -7,7 +7,7 @@ from nfvo_server import util
 
 import ai_module_client as swagc_ai
 
-active_requests = []
+active_requests = dict()
 
 
 def get_active_requests():
@@ -42,5 +42,5 @@ def add_sfcr(body):  # noqa: E501
         # print("class of body: %s" % body.__class__)
         print("[ sfcr_controller ] Notifying AI module of arrival.\n")
         notify_ai_module()
-        active_requests.append(body)
+        active_requests[body.id] = body
     return 'do some magic!'
