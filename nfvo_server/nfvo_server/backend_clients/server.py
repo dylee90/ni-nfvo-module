@@ -3,29 +3,17 @@ import requests
 import uuid
 
 from nfvo_server.config import cfg
-from nfvo_server.backend_clients.utils import create_openstack_client, get_base_urls
+from nfvo_server.backend_clients.utils import openstack_client as client
 
-auth_cfg = cfg["openstack_client"]["auth"]
 vnf_cfg = cfg["openstack_client"]["vnf"]
 
-_client = create_openstack_client(**auth_cfg)
-_base_urls = get_base_urls(_client)
-
-def rset_auth_info():
-    # FIXME: after the token is expired(?), we should re-authenticate.
-    # however, the auth_url, username and password is also lost,
-    # causing error on  re-authenticate call. A dirty fix
-    # is to set them every call.
-    _client.auth_url = auth_cfg["auth_url"]
-    _client.username = auth_cfg["username"]
-    _client.password = auth_cfg["password"]
 
 def create_server(flavor_id, host_name):
-    rset_auth_info()
+    client.rset_auth_info()
 
-    base_url = _base_urls["compute"]
+    base_url = client.base_urls["compute"]
     url = "/servers"
-    headers = {'X-Auth-Token': _client.auth_token}
+    headers = {'X-Auth-Token': client.client.auth_token}
 
     data = {
                 "server": {
@@ -33,7 +21,10 @@ def create_server(flavor_id, host_name):
                     "imageRef" : vnf_cfg["base_image_id"],
                     "flavorRef" : flavor_id,
                     "availability_zone": "nova:{}".format(host_name),
-                    "networks": [{"uuid": vnf_cfg["network_uuid"]},],
+                    "networks": [
+                        {"uuid": vnf_cfg["data_net_id"]},
+                        {"uuid": vnf_cfg["mgmt_net_id"]},
+                    ],
                 }
             }
 
@@ -47,11 +38,11 @@ def create_server(flavor_id, host_name):
         return req.json(), req.status_code
 
 def stop_server(server_id):
-    rset_auth_info()
+    client.rset_auth_info()
 
-    base_url = _base_urls["compute"]
+    base_url = client.base_urls["compute"]
     url = "/servers/{}/action".format(server_id)
-    headers = {'X-Auth-Token': _client.auth_token}
+    headers = {'X-Auth-Token': client.client.auth_token}
 
     data = {
                 "os-stop" : "dummy"
