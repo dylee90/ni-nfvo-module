@@ -58,7 +58,7 @@ def set_route(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = Route.from_dict(connexion.request.get_json())  # noqa: E501
-    return create_sfc(body.vnf_instance_ids)
+    return create_sfc(body.sfcr_id, body.vnf_instance_ids)
 
 
 def shutdown_vnf(body):  # noqa: E501

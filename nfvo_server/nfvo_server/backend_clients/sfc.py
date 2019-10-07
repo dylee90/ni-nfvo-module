@@ -3,44 +3,138 @@ import requests
 import uuid
 
 from nfvo_server.config import cfg
+from nfvo_server.controllers.sfcr_controller import active_requests
 from nfvo_server.backend_clients.utils import openstack_client as client
 
+from flask import abort
+from flask import current_app
 
-def create_sfc(vnf_ids):
+vnf_cfg = cfg["openstack_client"]["vnf"]
+
+def create_sfc(sfcr_id, vnf_ids):
     client.rset_auth_info()
-    for vnf_id in vnf_ids:
-        print(get_port_of_server(vnf_id))
 
-    base_url = client.base_urls["compute"]
-    url = "/servers"
+    if len(vnf_ids) == 0:
+        abort(400, "vnf list is empty")
+
+    sfcr = active_requests.get(sfcr_id)
+    if sfcr is None:
+        abort(400, "no sfcr for the provided sfcr_id")
+
+    port_ids = []
+    for vnf_id in vnf_ids:
+        port_ids.append(_get_data_port(vnf_id))
+
+    flow_classifier_id = _create_flow_classifier(sfcr, port_ids[0])
+    pp_group_id = _create_port_pair_group(port_ids)
+    p_chain_id = _create_port_chain(pp_group_id, flow_classifier_id)
+
+    return p_chain_id
+
+def _get_data_port(vnf_instance_id):
+    base_url = client.base_urls["network"]
+    url = "v2.0/ports?device_id={}".format(vnf_instance_id)
     headers = {'X-Auth-Token': client.client.auth_token}
 
-    data = {
-                "server": {
-                    "name" : "vnf_{}".format(str(uuid.uuid4())),
-                    "imageRef" : vnf_cfg["base_image_id"],
-                    "flavorRef" : flavor_id,
-                    "availability_zone": "nova:{}".format(host_name),
-                    "networks": [{"uuid": vnf_cfg["network_uuid"]},],
+    req = requests.get("{}{}".format(base_url, url),
+        headers=headers)
+    req = req.json()
+
+    for port in req["ports"]:
+        if port["network_id"] == vnf_cfg["data_net_id"]:
+            return port["id"]
+
+    abort(400, "no data port for vnf id: {}".format(vnf_instance_id))
+
+def _create_flow_classifier(sfcr, logical_source_port):
+    base_url = client.base_urls["network"]
+    url = "/v2.0/sfc/flow_classifiers"
+    headers = {'X-Auth-Token': client.client.auth_token}
+
+    body = dict()
+    # logical_source_port is required
+    body["logical_source_port"] = logical_source_port
+    if sfcr.src_ip is not None:
+        body["source_ip_prefix"] = sfcr.src_ip
+    if sfcr.dst_ip is not None:
+        body["destination_ip_prefix"] = sfcr.dst_ip
+    if sfcr.src_port is not None:
+        body["source_port_range_min"] = sfcr.src_port
+        body["source_port_range_max"] = sfcr.src_port
+    if sfcr.dst_port is not None:
+        body["destination_port_range_min"] = sfcr.dst_port
+        body["destination_port_range_max"] = sfcr.dst_port
+    if sfcr.proto is not None:
+        body["protocol"] = sfcr.proto
+
+    body = {"flow_classifier": body}
+
+    req = requests.post("{}{}".format(base_url, url),
+        json=body,
+        headers=headers)
+
+    if req.status_code == 201:
+        return req.json()["flow_classifier"]["id"]
+    else:
+        abort(400, req.json())
+
+def _create_port_pair_group(port_ids):
+    base_url = client.base_urls["network"]
+    headers = {'X-Auth-Token': client.client.auth_token}
+
+    # create port_pairs from ports. Use the same port for ingress and egress
+    port_pairs = []
+    for port_id in port_ids:
+        body = {
+                    "port_pair": {
+                        "ingress": port_id,
+                        "egress": port_id
+                    }
+                }
+
+        req = requests.post("{}{}".format(base_url, "/v2.0/sfc/port_pairs"),
+            json=body,
+            headers=headers)
+
+        if req.status_code == 201:
+            port_pairs.append(req.json()["port_pair"]["id"])
+        else:
+            abort(400, req.json())
+
+    # create one port part group from all port pairs
+    pp_group_id = None
+    body = {
+                "port_pair_group": {
+                    "port_pairs": port_pairs
+                }
+            }
+
+    req = requests.post("{}{}".format(base_url, "/v2.0/sfc/port_pair_groups"),
+        json=body,
+        headers=headers)
+
+    if req.status_code == 201:
+        return req.json()["port_pair_group"]["id"]
+    else:
+        abort(400, req.json())
+
+def _create_port_chain(port_pair_groups, flow_classifiers):
+    base_url = client.base_urls["network"]
+    url = "/v2.0/sfc/port_chains"
+    headers = {'X-Auth-Token': client.client.auth_token}
+
+    body = {
+                "port_chain": {
+                    "flow_classifiers": flow_classifiers,
+                    "port_pair_groups": port_pair_groups
                 }
             }
 
     req = requests.post("{}{}".format(base_url, url),
-        json=data,
+        json=body,
         headers=headers)
-    # if req is accepted (202), then return ID of server with success code (200)
-    if req.status_code == 202:
-        return req.json()["server"]["id"], 200
+
+    if req.status_code == 201:
+        return req.json()["port_chain"]["id"]
     else:
-        return req.json(), req.status_code
-
-def get_port_of_server(vnf_instance_id):
-    client.rset_auth_info()
-
-    # FIXME: why networking API missing v2.0 text???
-    base_url = "{}v2.0".format(client.base_urls["network"])
-    url = "/networks?device_id={}".format(vnf_instance_id)
-    headers = {'X-Auth-Token': _client.auth_token}
-    req = requests.get("{}{}".format(base_url, url),
-        headers=headers)
-    return req.json()
+        abort(400, req.json())
