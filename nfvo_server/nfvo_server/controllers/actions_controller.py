@@ -20,7 +20,7 @@ def notify_trafgen(sfcr):
         trafgen_api_instance = swagc_trafgen.TrafgenApi(swagc_trafgen.ApiClient(cfg))
         trafgen_api_instance.add_sfcr(sfcr)
     except Exception  as e:
-        print("[ action_controller ] Error: %s.\n" % e)
+        print("[ actions_controller ] Error: %s.\n" % e)
 
 def deploy_vnf(body):  # noqa: E501
     """Instantiate an instance of a VNF flavor on a given node.

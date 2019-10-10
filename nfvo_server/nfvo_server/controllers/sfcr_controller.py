@@ -12,7 +12,7 @@ active_requests = dict()
 
 def get_active_requests():
     global active_requests
-    return active_requests.value()
+    return list(active_requests.values())
 
 
 def notify_ai_module():
