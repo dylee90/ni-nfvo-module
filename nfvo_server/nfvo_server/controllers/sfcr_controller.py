@@ -1,4 +1,5 @@
 import connexion
+import datetime
 import six
 import time
 
@@ -8,7 +9,11 @@ from nfvo_server import util
 import ai_module_client as swagc_ai
 
 active_requests = dict()
+time_of_last_arrival = datetime.datetime.now()
 
+def get_time_of_last_arrival():
+    global time_of_last_arrival
+    return time_of_last_arrival
 
 def get_active_requests():
     global active_requests
@@ -37,6 +42,8 @@ def add_sfcr(body):  # noqa: E501
     :rtype: None
     """
     if connexion.request.is_json:
+        global time_of_last_arrival
+        time_of_last_arrival = datetime.datetime.now()
         body = SFCR.from_dict(connexion.request.get_json())  # noqa: E501
         print("[ sfcr_controller ] Received SFC request: %s.\n" % body.to_dict())
         # print("class of body: %s" % body.__class__)

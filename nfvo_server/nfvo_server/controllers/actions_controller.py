@@ -1,4 +1,5 @@
 import connexion
+import datetime
 import six
 from threading import Timer
 
@@ -7,7 +8,7 @@ from nfvo_server.models.route import Route  # noqa: E501
 from nfvo_server.models.shutdown import Shutdown  # noqa: E501
 from nfvo_server import util
 
-from nfvo_server.controllers.sfcr_controller import get_active_requests
+from nfvo_server.controllers.sfcr_controller import get_active_requests, get_time_of_last_arrival
 from nfvo_server.backend_clients.server import create_server, stop_server
 from nfvo_server.backend_clients.sfc import create_sfc
 
@@ -38,6 +39,8 @@ def deploy_vnf(body):  # noqa: E501
         print("[ actions_controller ] Deploying VNF %s on node id %s.\n" % (body.flavor.name, body.node_name))
         try:
             current_sfcr = get_active_requests()[-1]
+            timediff = (datetime.datetime.now() - get_time_of_last_arrival()).total_seconds()
+            print("[ actions_contoller ] Time between arrival and deployment action: %f" % timediff)
             t = Timer(3, notify_trafgen, [current_sfcr])
             t.start()
         except Exception as e:
