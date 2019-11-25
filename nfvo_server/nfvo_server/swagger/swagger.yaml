@@ -92,7 +92,7 @@ paths:
       - in: "body"
         name: "body"
         description: "Flavor of VNF instance to be deployed as well as the target\
-          \ node."
+          \ node. vnf_name is optional"
         required: true
         schema:
           $ref: "#/definitions/body"
@@ -187,6 +187,7 @@ definitions:
         type: "array"
         items:
           type: "string"
+    description: "SFC request. src/dst ip, src/dst port, proto are optional."
     example:
       src_ip: "src_ip"
       src_port: 6
@@ -204,6 +205,8 @@ definitions:
   Route:
     type: "object"
     properties:
+      sfc_name:
+        type: "string"
       sfcr_id:
         type: "integer"
         format: "int64"
@@ -211,11 +214,12 @@ definitions:
         type: "array"
         items:
           type: "string"
-    description: "Detailed routing information for a given SFCR ID."
+    description: "Detailed routing information for a given SFCR ID. sfc_name is optional"
     example:
       vnf_instance_ids:
       - "vnf_instance_ids"
       - "vnf_instance_ids"
+      sfc_name: "sfc_name"
       sfcr_id: 0
   Shutdown:
     type: "object"
@@ -257,6 +261,8 @@ definitions:
       flavor:
         $ref: "#/definitions/VNFFlavor"
       node_name:
+        type: "string"
+      vnf_name:
         type: "string"
 externalDocs:
   description: "Find out more about DPNM NI."

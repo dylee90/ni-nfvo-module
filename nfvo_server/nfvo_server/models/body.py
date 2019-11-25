@@ -16,26 +16,31 @@ class Body(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, flavor: VNFFlavor=None, node_name: str=None):  # noqa: E501
+    def __init__(self, flavor: VNFFlavor=None, node_name: str=None, vnf_name: str=None):  # noqa: E501
         """Body - a model defined in Swagger
 
         :param flavor: The flavor of this Body.  # noqa: E501
         :type flavor: VNFFlavor
         :param node_name: The node_name of this Body.  # noqa: E501
         :type node_name: str
+        :param vnf_name: The vnf_name of this Body.  # noqa: E501
+        :type vnf_name: str
         """
         self.swagger_types = {
             'flavor': VNFFlavor,
-            'node_name': str
+            'node_name': str,
+            'vnf_name': str
         }
 
         self.attribute_map = {
             'flavor': 'flavor',
-            'node_name': 'node_name'
+            'node_name': 'node_name',
+            'vnf_name': 'vnf_name'
         }
 
         self._flavor = flavor
         self._node_name = node_name
+        self._vnf_name = vnf_name
 
     @classmethod
     def from_dict(cls, dikt) -> 'Body':
@@ -89,3 +94,24 @@ class Body(Model):
         """
 
         self._node_name = node_name
+
+    @property
+    def vnf_name(self) -> str:
+        """Gets the vnf_name of this Body.
+
+
+        :return: The vnf_name of this Body.
+        :rtype: str
+        """
+        return self._vnf_name
+
+    @vnf_name.setter
+    def vnf_name(self, vnf_name: str):
+        """Sets the vnf_name of this Body.
+
+
+        :param vnf_name: The vnf_name of this Body.
+        :type vnf_name: str
+        """
+
+        self._vnf_name = vnf_name

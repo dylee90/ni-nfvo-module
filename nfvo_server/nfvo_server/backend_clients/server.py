@@ -8,16 +8,21 @@ from nfvo_server.backend_clients.utils import openstack_client as client
 vnf_cfg = cfg["openstack_client"]["vnf"]
 
 
-def create_server(flavor_id, host_name):
+def create_server(server_prefix, flavor_id, host_name):
     client.rset_auth_info()
 
     base_url = client.base_urls["compute"]
     url = "/servers"
     headers = {'X-Auth-Token': client.client.auth_token}
 
+    if server_prefix:
+        server_name = "{}_{}".format(server_prefix, str(uuid.uuid4()))
+    else:
+        server_name = "vnf_{}".format(str(uuid.uuid4()))
+
     data = {
                 "server": {
-                    "name" : "vnf_{}".format(str(uuid.uuid4())),
+                    "name" : server_name,
                     "imageRef" : vnf_cfg["base_image_id"],
                     "flavorRef" : flavor_id,
                     "availability_zone": "nova:{}".format(host_name),

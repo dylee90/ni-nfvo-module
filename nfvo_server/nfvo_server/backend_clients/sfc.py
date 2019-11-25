@@ -11,7 +11,7 @@ from flask import current_app
 
 vnf_cfg = cfg["openstack_client"]["vnf"]
 
-def create_sfc(sfcr_id, vnf_ids):
+def create_sfc(sfc_prefix, sfcr_id, vnf_ids):
     client.rset_auth_info()
 
     if len(vnf_ids) == 0:
@@ -25,9 +25,14 @@ def create_sfc(sfcr_id, vnf_ids):
     for vnf_id in vnf_ids:
         port_ids.append(_get_data_port(vnf_id))
 
-    flow_classifier_id = _create_flow_classifier(sfcr, port_ids[0])
-    pp_group_id = _create_port_pair_group(port_ids)
-    p_chain_id = _create_port_chain(pp_group_id, flow_classifier_id)
+    if sfc_prefix:
+        postfix_name = "{}_{}".format(fc_prefix, str(uuid.uuid4()))
+    else:
+        postfix_name = "{}".format(str(uuid.uuid4()))
+
+    flow_classifier_id = _create_flow_classifier(postfix_name, sfcr, port_ids[0])
+    pp_group_id = _create_port_pair_group(postfix_name, port_ids)
+    p_chain_id = _create_port_chain(postfix_name, pp_group_id, flow_classifier_id)
 
     return p_chain_id
 
@@ -46,7 +51,7 @@ def _get_data_port(vnf_instance_id):
 
     abort(400, "no data port for vnf id: {}".format(vnf_instance_id))
 
-def _create_flow_classifier(sfcr, logical_source_port):
+def _create_flow_classifier(postfix_name, sfcr, logical_source_port):
     base_url = client.base_urls["network"]
     url = "/v2.0/sfc/flow_classifiers"
     headers = {'X-Auth-Token': client.client.auth_token}
@@ -54,6 +59,8 @@ def _create_flow_classifier(sfcr, logical_source_port):
     body = dict()
     # logical_source_port is required
     body["logical_source_port"] = logical_source_port
+    body["name"] = "fc_{}".format(postfix_name)
+
     if sfcr.src_ip is not None:
         body["source_ip_prefix"] = sfcr.src_ip
     if sfcr.dst_ip is not None:
@@ -78,7 +85,7 @@ def _create_flow_classifier(sfcr, logical_source_port):
     else:
         abort(400, req.json())
 
-def _create_port_pair_group(port_ids):
+def _create_port_pair_group(postfix_name, port_ids):
     base_url = client.base_urls["network"]
     headers = {'X-Auth-Token': client.client.auth_token}
 
@@ -88,7 +95,8 @@ def _create_port_pair_group(port_ids):
         body = {
                     "port_pair": {
                         "ingress": port_id,
-                        "egress": port_id
+                        "egress": port_id,
+                        "name": "ppg_{}".format(postfix_name),
                     }
                 }
 
@@ -105,7 +113,8 @@ def _create_port_pair_group(port_ids):
     pp_group_id = None
     body = {
                 "port_pair_group": {
-                    "port_pairs": port_pairs
+                    "port_pairs": port_pairs,
+                    "name": "ppg_{}".format(postfix_name),
                 }
             }
 
@@ -118,7 +127,7 @@ def _create_port_pair_group(port_ids):
     else:
         abort(400, req.json())
 
-def _create_port_chain(port_pair_groups, flow_classifiers):
+def _create_port_chain(postfix_name, port_pair_groups, flow_classifiers):
     base_url = client.base_urls["network"]
     url = "/v2.0/sfc/port_chains"
     headers = {'X-Auth-Token': client.client.auth_token}
@@ -126,7 +135,8 @@ def _create_port_chain(port_pair_groups, flow_classifiers):
     body = {
                 "port_chain": {
                     "flow_classifiers": flow_classifiers,
-                    "port_pair_groups": port_pair_groups
+                    "port_pair_groups": port_pair_groups,
+                    "name": "pc_{}".format(postfix_name),
                 }
             }
 

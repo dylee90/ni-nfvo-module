@@ -15,24 +15,29 @@ class Route(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, sfcr_id: int=None, vnf_instance_ids: List[str]=None):  # noqa: E501
+    def __init__(self, sfc_name: str=None, sfcr_id: int=None, vnf_instance_ids: List[str]=None):  # noqa: E501
         """Route - a model defined in Swagger
 
+        :param sfc_name: The sfc_name of this Route.  # noqa: E501
+        :type sfc_name: str
         :param sfcr_id: The sfcr_id of this Route.  # noqa: E501
         :type sfcr_id: int
         :param vnf_instance_ids: The vnf_instance_ids of this Route.  # noqa: E501
         :type vnf_instance_ids: List[str]
         """
         self.swagger_types = {
+            'sfc_name': str,
             'sfcr_id': int,
             'vnf_instance_ids': List[str]
         }
 
         self.attribute_map = {
+            'sfc_name': 'sfc_name',
             'sfcr_id': 'sfcr_id',
             'vnf_instance_ids': 'vnf_instance_ids'
         }
 
+        self._sfc_name = sfc_name
         self._sfcr_id = sfcr_id
         self._vnf_instance_ids = vnf_instance_ids
 
@@ -46,6 +51,27 @@ class Route(Model):
         :rtype: Route
         """
         return util.deserialize_model(dikt, cls)
+
+    @property
+    def sfc_name(self) -> str:
+        """Gets the sfc_name of this Route.
+
+
+        :return: The sfc_name of this Route.
+        :rtype: str
+        """
+        return self._sfc_name
+
+    @sfc_name.setter
+    def sfc_name(self, sfc_name: str):
+        """Sets the sfc_name of this Route.
+
+
+        :param sfc_name: The sfc_name of this Route.
+        :type sfc_name: str
+        """
+
+        self._sfc_name = sfc_name
 
     @property
     def sfcr_id(self) -> int:

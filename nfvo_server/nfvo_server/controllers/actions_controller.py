@@ -48,7 +48,7 @@ def deploy_vnf(body):  # noqa: E501
         except Exception as e:
             print("[ actions_controller ] Error: %s.\n" % e)
 
-    return create_server(flavor_id=body.flavor.id, host_name=body.node_name)
+    return create_server(server_prefix=body.vnf_name, flavor_id=body.flavor.id, host_name=body.node_name)
 
 
 def set_route(body):  # noqa: E501
@@ -63,7 +63,7 @@ def set_route(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = Route.from_dict(connexion.request.get_json())  # noqa: E501
-    ret = create_sfc(body.sfcr_id, body.vnf_instance_ids)
+    ret = create_sfc(body.sfc_name, body.sfcr_id, body.vnf_instance_ids)
 
     routes.append(body)
 
