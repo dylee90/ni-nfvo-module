@@ -61,15 +61,17 @@ def _create_flow_classifier(postfix_name, sfcr, logical_source_port):
     body["logical_source_port"] = logical_source_port
     body["name"] = "fc_{}".format(postfix_name)
 
-    if sfcr.src_ip is not None:
+    if sfcr.src_ip_prefix is not None:
         body["source_ip_prefix"] = sfcr.src_ip_prefix
-    if sfcr.dst_ip is not None:
+    if sfcr.dst_ip_prefix is not None:
         body["destination_ip_prefix"] = sfcr.dst_ip_prefix
-    if sfcr.src_port is not None:
+    if sfcr.src_port_min is not None:
         body["source_port_range_min"] = sfcr.src_port_min
+    if sfcr.src_port_max is not None:
         body["source_port_range_max"] = sfcr.src_port_max
-    if sfcr.dst_port is not None:
+    if sfcr.dst_port_min is not None:
         body["destination_port_range_min"] = sfcr.dst_port_min
+    if sfcr.dst_port_max is not None:
         body["destination_port_range_max"] = sfcr.dst_port_max
     if sfcr.proto is not None:
         body["protocol"] = sfcr.proto
@@ -91,12 +93,12 @@ def _create_port_pair_group(postfix_name, port_ids):
 
     # create port_pairs from ports. Use the same port for ingress and egress
     port_pairs = []
-    for port_id in port_ids:
+    for i, port_id in enumerate(port_ids):
         body = {
                     "port_pair": {
                         "ingress": port_id,
                         "egress": port_id,
-                        "name": "ppg_{}".format(postfix_name),
+                        "name": "pp_{}_{}".format(i, postfix_name),
                     }
                 }
 
@@ -109,23 +111,26 @@ def _create_port_pair_group(postfix_name, port_ids):
         else:
             abort(400, req.json())
 
-    # create one port part group from all port pairs
-    pp_group_id = None
-    body = {
-                "port_pair_group": {
-                    "port_pairs": port_pairs,
-                    "name": "ppg_{}".format(postfix_name),
+    # create port pair group for each port pair
+    port_pair_groups = []
+    for i, port_pair in enumerate(port_pairs):
+        body = {
+                    "port_pair_group": {
+                        "port_pairs": [port_pair],
+                        "name": "ppg_{}_{}".format(i, postfix_name),
+                    }
                 }
-            }
 
-    req = requests.post("{}{}".format(base_url, "/v2.0/sfc/port_pair_groups"),
-        json=body,
-        headers=headers)
+        req = requests.post("{}{}".format(base_url, "/v2.0/sfc/port_pair_groups"),
+            json=body,
+            headers=headers)
 
-    if req.status_code == 201:
-        return req.json()["port_pair_group"]["id"]
-    else:
-        abort(400, req.json())
+        if req.status_code == 201:
+            port_pair_groups.append(req.json()["port_pair_group"]["id"])
+        else:
+            abort(400, req.json())
+
+    return port_pair_groups
 
 def _create_port_chain(postfix_name, port_pair_groups, flow_classifiers):
     base_url = client.base_urls["network"]
