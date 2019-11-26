@@ -15,21 +15,25 @@ class SFCR(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, id: int=None, arrivaltime: datetime=None, src_ip: str=None, dst_ip: str=None, src_port: int=None, dst_port: int=None, bw: int=None, delay: int=None, duration: int=None, proto: str=None, nf_chain: List[str]=None):  # noqa: E501
+    def __init__(self, id: int=None, arrivaltime: datetime=None, src_ip_prefix: str=None, dst_ip_prefix: str=None, src_port_min: int=None, src_port_max: int=None, dst_port_min: int=None, dst_port_max: int=None, bw: int=None, delay: int=None, duration: int=None, proto: str=None, nf_chain: List[str]=None):  # noqa: E501
         """SFCR - a model defined in Swagger
 
         :param id: The id of this SFCR.  # noqa: E501
         :type id: int
         :param arrivaltime: The arrivaltime of this SFCR.  # noqa: E501
         :type arrivaltime: datetime
-        :param src_ip: The src_ip of this SFCR.  # noqa: E501
-        :type src_ip: str
-        :param dst_ip: The dst_ip of this SFCR.  # noqa: E501
-        :type dst_ip: str
-        :param src_port: The src_port of this SFCR.  # noqa: E501
-        :type src_port: int
-        :param dst_port: The dst_port of this SFCR.  # noqa: E501
-        :type dst_port: int
+        :param src_ip_prefix: The src_ip_prefix of this SFCR.  # noqa: E501
+        :type src_ip_prefix: str
+        :param dst_ip_prefix: The dst_ip_prefix of this SFCR.  # noqa: E501
+        :type dst_ip_prefix: str
+        :param src_port_min: The src_port_min of this SFCR.  # noqa: E501
+        :type src_port_min: int
+        :param src_port_max: The src_port_max of this SFCR.  # noqa: E501
+        :type src_port_max: int
+        :param dst_port_min: The dst_port_min of this SFCR.  # noqa: E501
+        :type dst_port_min: int
+        :param dst_port_max: The dst_port_max of this SFCR.  # noqa: E501
+        :type dst_port_max: int
         :param bw: The bw of this SFCR.  # noqa: E501
         :type bw: int
         :param delay: The delay of this SFCR.  # noqa: E501
@@ -44,10 +48,12 @@ class SFCR(Model):
         self.swagger_types = {
             'id': int,
             'arrivaltime': datetime,
-            'src_ip': str,
-            'dst_ip': str,
-            'src_port': int,
-            'dst_port': int,
+            'src_ip_prefix': str,
+            'dst_ip_prefix': str,
+            'src_port_min': int,
+            'src_port_max': int,
+            'dst_port_min': int,
+            'dst_port_max': int,
             'bw': int,
             'delay': int,
             'duration': int,
@@ -58,10 +64,12 @@ class SFCR(Model):
         self.attribute_map = {
             'id': 'id',
             'arrivaltime': 'arrivaltime',
-            'src_ip': 'src_ip',
-            'dst_ip': 'dst_ip',
-            'src_port': 'src_port',
-            'dst_port': 'dst_port',
+            'src_ip_prefix': 'src_ip_prefix',
+            'dst_ip_prefix': 'dst_ip_prefix',
+            'src_port_min': 'src_port_min',
+            'src_port_max': 'src_port_max',
+            'dst_port_min': 'dst_port_min',
+            'dst_port_max': 'dst_port_max',
             'bw': 'bw',
             'delay': 'delay',
             'duration': 'duration',
@@ -71,10 +79,12 @@ class SFCR(Model):
 
         self._id = id
         self._arrivaltime = arrivaltime
-        self._src_ip = src_ip
-        self._dst_ip = dst_ip
-        self._src_port = src_port
-        self._dst_port = dst_port
+        self._src_ip_prefix = src_ip_prefix
+        self._dst_ip_prefix = dst_ip_prefix
+        self._src_port_min = src_port_min
+        self._src_port_max = src_port_max
+        self._dst_port_min = dst_port_min
+        self._dst_port_max = dst_port_max
         self._bw = bw
         self._delay = delay
         self._duration = duration
@@ -135,88 +145,130 @@ class SFCR(Model):
         self._arrivaltime = arrivaltime
 
     @property
-    def src_ip(self) -> str:
-        """Gets the src_ip of this SFCR.
+    def src_ip_prefix(self) -> str:
+        """Gets the src_ip_prefix of this SFCR.
 
 
-        :return: The src_ip of this SFCR.
+        :return: The src_ip_prefix of this SFCR.
         :rtype: str
         """
-        return self._src_ip
+        return self._src_ip_prefix
 
-    @src_ip.setter
-    def src_ip(self, src_ip: str):
-        """Sets the src_ip of this SFCR.
+    @src_ip_prefix.setter
+    def src_ip_prefix(self, src_ip_prefix: str):
+        """Sets the src_ip_prefix of this SFCR.
 
 
-        :param src_ip: The src_ip of this SFCR.
-        :type src_ip: str
+        :param src_ip_prefix: The src_ip_prefix of this SFCR.
+        :type src_ip_prefix: str
         """
 
-        self._src_ip = src_ip
+        self._src_ip_prefix = src_ip_prefix
 
     @property
-    def dst_ip(self) -> str:
-        """Gets the dst_ip of this SFCR.
+    def dst_ip_prefix(self) -> str:
+        """Gets the dst_ip_prefix of this SFCR.
 
 
-        :return: The dst_ip of this SFCR.
+        :return: The dst_ip_prefix of this SFCR.
         :rtype: str
         """
-        return self._dst_ip
+        return self._dst_ip_prefix
 
-    @dst_ip.setter
-    def dst_ip(self, dst_ip: str):
-        """Sets the dst_ip of this SFCR.
+    @dst_ip_prefix.setter
+    def dst_ip_prefix(self, dst_ip_prefix: str):
+        """Sets the dst_ip_prefix of this SFCR.
 
 
-        :param dst_ip: The dst_ip of this SFCR.
-        :type dst_ip: str
+        :param dst_ip_prefix: The dst_ip_prefix of this SFCR.
+        :type dst_ip_prefix: str
         """
 
-        self._dst_ip = dst_ip
+        self._dst_ip_prefix = dst_ip_prefix
 
     @property
-    def src_port(self) -> int:
-        """Gets the src_port of this SFCR.
+    def src_port_min(self) -> int:
+        """Gets the src_port_min of this SFCR.
 
 
-        :return: The src_port of this SFCR.
+        :return: The src_port_min of this SFCR.
         :rtype: int
         """
-        return self._src_port
+        return self._src_port_min
 
-    @src_port.setter
-    def src_port(self, src_port: int):
-        """Sets the src_port of this SFCR.
+    @src_port_min.setter
+    def src_port_min(self, src_port_min: int):
+        """Sets the src_port_min of this SFCR.
 
 
-        :param src_port: The src_port of this SFCR.
-        :type src_port: int
+        :param src_port_min: The src_port_min of this SFCR.
+        :type src_port_min: int
         """
 
-        self._src_port = src_port
+        self._src_port_min = src_port_min
 
     @property
-    def dst_port(self) -> int:
-        """Gets the dst_port of this SFCR.
+    def src_port_max(self) -> int:
+        """Gets the src_port_max of this SFCR.
 
 
-        :return: The dst_port of this SFCR.
+        :return: The src_port_max of this SFCR.
         :rtype: int
         """
-        return self._dst_port
+        return self._src_port_max
 
-    @dst_port.setter
-    def dst_port(self, dst_port: int):
-        """Sets the dst_port of this SFCR.
+    @src_port_max.setter
+    def src_port_max(self, src_port_max: int):
+        """Sets the src_port_max of this SFCR.
 
 
-        :param dst_port: The dst_port of this SFCR.
-        :type dst_port: int
+        :param src_port_max: The src_port_max of this SFCR.
+        :type src_port_max: int
         """
 
-        self._dst_port = dst_port
+        self._src_port_max = src_port_max
+
+    @property
+    def dst_port_min(self) -> int:
+        """Gets the dst_port_min of this SFCR.
+
+
+        :return: The dst_port_min of this SFCR.
+        :rtype: int
+        """
+        return self._dst_port_min
+
+    @dst_port_min.setter
+    def dst_port_min(self, dst_port_min: int):
+        """Sets the dst_port_min of this SFCR.
+
+
+        :param dst_port_min: The dst_port_min of this SFCR.
+        :type dst_port_min: int
+        """
+
+        self._dst_port_min = dst_port_min
+
+    @property
+    def dst_port_max(self) -> int:
+        """Gets the dst_port_max of this SFCR.
+
+
+        :return: The dst_port_max of this SFCR.
+        :rtype: int
+        """
+        return self._dst_port_max
+
+    @dst_port_max.setter
+    def dst_port_max(self, dst_port_max: int):
+        """Sets the dst_port_max of this SFCR.
+
+
+        :param dst_port_max: The dst_port_max of this SFCR.
+        :type dst_port_max: int
+        """
+
+        self._dst_port_max = dst_port_max
 
     @property
     def bw(self) -> int:

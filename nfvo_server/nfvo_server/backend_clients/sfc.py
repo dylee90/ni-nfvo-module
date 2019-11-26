@@ -62,15 +62,15 @@ def _create_flow_classifier(postfix_name, sfcr, logical_source_port):
     body["name"] = "fc_{}".format(postfix_name)
 
     if sfcr.src_ip is not None:
-        body["source_ip_prefix"] = sfcr.src_ip
+        body["source_ip_prefix"] = sfcr.src_ip_prefix
     if sfcr.dst_ip is not None:
-        body["destination_ip_prefix"] = sfcr.dst_ip
+        body["destination_ip_prefix"] = sfcr.dst_ip_prefix
     if sfcr.src_port is not None:
-        body["source_port_range_min"] = sfcr.src_port
-        body["source_port_range_max"] = sfcr.src_port
+        body["source_port_range_min"] = sfcr.src_port_min
+        body["source_port_range_max"] = sfcr.src_port_max
     if sfcr.dst_port is not None:
-        body["destination_port_range_min"] = sfcr.dst_port
-        body["destination_port_range_max"] = sfcr.dst_port
+        body["destination_port_range_min"] = sfcr.dst_port_min
+        body["destination_port_range_max"] = sfcr.dst_port_max
     if sfcr.proto is not None:
         body["protocol"] = sfcr.proto
 

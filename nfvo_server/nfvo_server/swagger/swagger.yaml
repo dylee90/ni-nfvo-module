@@ -162,14 +162,20 @@ definitions:
       arrivaltime:
         type: "string"
         format: "date-time"
-      src_ip:
+      src_ip_prefix:
         type: "string"
-      dst_ip:
+      dst_ip_prefix:
         type: "string"
-      src_port:
+      src_port_min:
         type: "integer"
         format: "int32"
-      dst_port:
+      src_port_max:
+        type: "integer"
+        format: "int32"
+      dst_port_min:
+        type: "integer"
+        format: "int32"
+      dst_port_max:
         type: "integer"
         format: "int32"
       bw:
@@ -187,21 +193,24 @@ definitions:
         type: "array"
         items:
           type: "string"
-    description: "SFC request. src/dst ip, src/dst port, proto are optional."
+    description: "SFC request. src/dst ip prefix, src/dst port min/max, proto are\
+      \ optional."
     example:
-      src_ip: "src_ip"
-      src_port: 6
-      duration: 2
-      delay: 5
-      bw: 5
-      proto: "proto"
+      src_port_max: 1
+      dst_ip_prefix: "dst_ip_prefix"
       nf_chain:
       - "nf_chain"
       - "nf_chain"
+      src_ip_prefix: "src_ip_prefix"
+      src_port_min: 6
+      duration: 9
+      dst_port_min: 5
+      delay: 7
+      bw: 2
+      proto: "proto"
       arrivaltime: "2000-01-23T04:56:07.000+00:00"
-      dst_port: 1
       id: 0
-      dst_ip: "dst_ip"
+      dst_port_max: 5
   Route:
     type: "object"
     properties:
