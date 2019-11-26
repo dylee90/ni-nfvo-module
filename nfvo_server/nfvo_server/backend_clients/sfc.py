@@ -11,7 +11,7 @@ from flask import current_app
 
 vnf_cfg = cfg["openstack_client"]["vnf"]
 
-def create_sfc(sfc_prefix, sfcr_id, vnf_ids):
+def create_sfc(fc_prefix, sfcr_id, logical_source_port, vnf_ids):
     client.rset_auth_info()
 
     if len(vnf_ids) == 0:
@@ -25,12 +25,12 @@ def create_sfc(sfc_prefix, sfcr_id, vnf_ids):
     for vnf_id in vnf_ids:
         port_ids.append(_get_data_port(vnf_id))
 
-    if sfc_prefix:
+    if fc_prefix:
         postfix_name = "{}_{}".format(fc_prefix, str(uuid.uuid4()))
     else:
         postfix_name = "{}".format(str(uuid.uuid4()))
 
-    flow_classifier_id = _create_flow_classifier(postfix_name, sfcr, port_ids[0])
+    flow_classifier_id = _create_flow_classifier(postfix_name, sfcr, logical_source_port)
     pp_group_id = _create_port_pair_group(postfix_name, port_ids)
     p_chain_id = _create_port_chain(postfix_name, pp_group_id, flow_classifier_id)
 

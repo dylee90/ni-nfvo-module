@@ -210,17 +210,20 @@ definitions:
       sfcr_id:
         type: "integer"
         format: "int64"
+      openstack_source_port:
+        type: "string"
       vnf_instance_ids:
         type: "array"
         items:
           type: "string"
-    description: "Detailed routing information for a given SFCR ID. sfc_name is optional"
+    description: "Detailed routing information for a given SFCR ID. sfc_name is optional."
     example:
       vnf_instance_ids:
       - "vnf_instance_ids"
       - "vnf_instance_ids"
       sfc_name: "sfc_name"
       sfcr_id: 0
+      openstack_source_port: "openstack_source_port"
   Shutdown:
     type: "object"
     properties:

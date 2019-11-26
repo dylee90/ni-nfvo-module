@@ -63,7 +63,7 @@ def set_route(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = Route.from_dict(connexion.request.get_json())  # noqa: E501
-    ret = create_sfc(body.sfc_name, body.sfcr_id, body.vnf_instance_ids)
+    ret = create_sfc(body.sfc_name, body.sfcr_id, body.openstack_source_port, body.vnf_instance_ids)
 
     routes.append(body)
 
