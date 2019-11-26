@@ -62,3 +62,6 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+#config file
+nfvo_server/nfvo_server/config/*.yaml

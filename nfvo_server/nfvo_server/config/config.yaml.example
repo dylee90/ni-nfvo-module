@@ -1,6 +1,6 @@
 openstack_client:
   auth:
-    auth_url: "http://<openstack_controller_address>/identity/v3"
+    auth_url: "http://<monitoring_server_address>/identity/v3"
     username: "admin"
     password: <password>
     project_name: "demo"
@@ -9,7 +9,7 @@ openstack_client:
 
   vnf:
     # openstack image id that all vnfs will be built from
-    base_image_id: "939264fa-136f-473b-b8d6-708d965916bd"
+    base_image_id: <base_image_id>
     # each vnfs connect two openstack networks, data network and management network
-    data_net_id: "e11bc4ac-ad69-4b84-a973-87d844dd4367"
-    mgmt_net_id: "624971d6-7374-4536-a1ae-8377f91d73d6"
+    data_net_id: <data_net_id>
+    mgmt_net_id: <mgmt_net_id>
