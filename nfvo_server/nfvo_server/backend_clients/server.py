@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import requests
 import uuid
+import base64
 
 from nfvo_server.config import cfg
 from nfvo_server.backend_clients.utils import openstack_client as client
@@ -8,7 +9,7 @@ from nfvo_server.backend_clients.utils import openstack_client as client
 vnf_cfg = cfg["openstack_client"]["vnf"]
 
 
-def create_server(server_prefix, flavor_id, host_name):
+def create_server(server_prefix, flavor_id, host_name, user_data):
     client.rset_auth_info()
 
     base_url = client.base_urls["compute"]
@@ -26,6 +27,7 @@ def create_server(server_prefix, flavor_id, host_name):
                     "imageRef" : vnf_cfg["base_image_id"],
                     "flavorRef" : flavor_id,
                     "availability_zone": "nova:{}".format(host_name),
+                    "user_data" : base64.b64encode(user_data.encode('ascii')),
                     "networks": [
                         {"uuid": vnf_cfg["data_net_id"]},
                         {"uuid": vnf_cfg["mgmt_net_id"]},

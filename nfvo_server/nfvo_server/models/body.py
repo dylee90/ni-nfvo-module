@@ -6,7 +6,6 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from nfvo_server.models.base_model_ import Model
-from nfvo_server.models.vnf_flavor import VNFFlavor  # noqa: F401,E501
 from nfvo_server import util
 
 
@@ -16,31 +15,36 @@ class Body(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, flavor: VNFFlavor=None, node_name: str=None, vnf_name: str=None):  # noqa: E501
+    def __init__(self, flavor_id: str=None, node_name: str=None, vnf_name: str=None, user_data: str=None):  # noqa: E501
         """Body - a model defined in Swagger
 
-        :param flavor: The flavor of this Body.  # noqa: E501
-        :type flavor: VNFFlavor
+        :param flavor_id: The flavor_id of this Body.  # noqa: E501
+        :type flavor_id: str
         :param node_name: The node_name of this Body.  # noqa: E501
         :type node_name: str
         :param vnf_name: The vnf_name of this Body.  # noqa: E501
         :type vnf_name: str
+        :param user_data: The user_data of this Body.  # noqa: E501
+        :type user_data: str
         """
         self.swagger_types = {
-            'flavor': VNFFlavor,
+            'flavor_id': str,
             'node_name': str,
-            'vnf_name': str
+            'vnf_name': str,
+            'user_data': str
         }
 
         self.attribute_map = {
-            'flavor': 'flavor',
+            'flavor_id': 'flavor_id',
             'node_name': 'node_name',
-            'vnf_name': 'vnf_name'
+            'vnf_name': 'vnf_name',
+            'user_data': 'user_data'
         }
 
-        self._flavor = flavor
+        self._flavor_id = flavor_id
         self._node_name = node_name
         self._vnf_name = vnf_name
+        self._user_data = user_data
 
     @classmethod
     def from_dict(cls, dikt) -> 'Body':
@@ -54,25 +58,25 @@ class Body(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def flavor(self) -> VNFFlavor:
-        """Gets the flavor of this Body.
+    def flavor_id(self) -> str:
+        """Gets the flavor_id of this Body.
 
 
-        :return: The flavor of this Body.
-        :rtype: VNFFlavor
+        :return: The flavor_id of this Body.
+        :rtype: str
         """
-        return self._flavor
+        return self._flavor_id
 
-    @flavor.setter
-    def flavor(self, flavor: VNFFlavor):
-        """Sets the flavor of this Body.
+    @flavor_id.setter
+    def flavor_id(self, flavor_id: str):
+        """Sets the flavor_id of this Body.
 
 
-        :param flavor: The flavor of this Body.
-        :type flavor: VNFFlavor
+        :param flavor_id: The flavor_id of this Body.
+        :type flavor_id: str
         """
 
-        self._flavor = flavor
+        self._flavor_id = flavor_id
 
     @property
     def node_name(self) -> str:
@@ -115,3 +119,24 @@ class Body(Model):
         """
 
         self._vnf_name = vnf_name
+
+    @property
+    def user_data(self) -> str:
+        """Gets the user_data of this Body.
+
+
+        :return: The user_data of this Body.
+        :rtype: str
+        """
+        return self._user_data
+
+    @user_data.setter
+    def user_data(self, user_data: str):
+        """Sets the user_data of this Body.
+
+
+        :param user_data: The user_data of this Body.
+        :type user_data: str
+        """
+
+        self._user_data = user_data

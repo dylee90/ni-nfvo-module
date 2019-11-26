@@ -229,40 +229,16 @@ definitions:
     description: "vnf instance id to shutdown."
     example:
       vnf_instance_id: "vnf_instance_id"
-  VNFFlavor:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-      name:
-        type: "string"
-      capacity_mbps:
-        type: "integer"
-        format: "int32"
-      delay_us:
-        type: "integer"
-        format: "int32"
-      n_cores:
-        type: "integer"
-        format: "int32"
-      ram_mb:
-        type: "integer"
-        format: "int32"
-    example:
-      n_cores: 1
-      ram_mb: 5
-      capacity_mbps: 0
-      name: "name"
-      id: "id"
-      delay_us: 6
   body:
     type: "object"
     properties:
-      flavor:
-        $ref: "#/definitions/VNFFlavor"
+      flavor_id:
+        type: "string"
       node_name:
         type: "string"
       vnf_name:
+        type: "string"
+      user_data:
         type: "string"
 externalDocs:
   description: "Find out more about DPNM NI."

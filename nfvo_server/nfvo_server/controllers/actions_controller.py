@@ -38,7 +38,7 @@ def deploy_vnf(body):  # noqa: E501
     if connexion.request.is_json:
         body = Body.from_dict(connexion.request.get_json())  # noqa: E501
         print("[ actions_controller ] Received deployment request: %s.\n" % str(body))
-        print("[ actions_controller ] Deploying VNF %s on node id %s.\n" % (body.flavor.name, body.node_name))
+        print("[ actions_controller ] Deploying VNF %s on node id %s.\n" % (body.flavor_id, body.node_name))
         try:
             current_sfcr = get_active_requests()[-1]
             timediff = (datetime.datetime.now() - get_time_of_last_arrival()).total_seconds()
@@ -48,7 +48,7 @@ def deploy_vnf(body):  # noqa: E501
         except Exception as e:
             print("[ actions_controller ] Error: %s.\n" % e)
 
-    return create_server(server_prefix=body.vnf_name, flavor_id=body.flavor.id, host_name=body.node_name)
+    return create_server(body.vnf_name, body.flavor_id, body.node_name, body.user_data)
 
 
 def set_route(body):  # noqa: E501

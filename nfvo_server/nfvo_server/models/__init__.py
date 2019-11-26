@@ -7,4 +7,3 @@ from nfvo_server.models.body import Body
 from nfvo_server.models.route import Route
 from nfvo_server.models.sfcr import SFCR
 from nfvo_server.models.shutdown import Shutdown
-from nfvo_server.models.vnf_flavor import VNFFlavor
