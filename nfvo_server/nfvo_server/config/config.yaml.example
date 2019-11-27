@@ -8,8 +8,6 @@ openstack_client:
     project_domain_id: "default"
 
   vnf:
-    # openstack image id that all vnfs will be built from
-    base_image_id: <base_image_id>
     # each vnfs connect two openstack networks, data network and management network
     data_net_id: <data_net_id>
     mgmt_net_id: <mgmt_net_id>
