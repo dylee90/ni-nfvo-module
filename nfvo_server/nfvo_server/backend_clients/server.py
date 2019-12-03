@@ -41,8 +41,8 @@ def create_server(server_prefix, flavor_id, host_name, user_data):
                     "availability_zone": "nova:{}".format(host_name),
                     "user_data" : base64.b64encode(user_data.encode('ascii')),
                     "networks": [
-                        {"uuid": vnf_cfg["data_net_id"]},
                         {"uuid": vnf_cfg["mgmt_net_id"]},
+                        {"uuid": vnf_cfg["data_net_id"]},
                     ],
                 }
             }
