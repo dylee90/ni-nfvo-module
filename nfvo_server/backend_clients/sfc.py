@@ -32,7 +32,8 @@ def create_sfc(fc_prefix, sfcr_id, logical_source_port, vnf_ids_list):
         postfix_name = "{}".format(str(uuid.uuid4()))
 
     flow_classifier_id = _create_flow_classifier(postfix_name, sfcr, logical_source_port)
-    pp_group_ids = _create_port_pair_group(postfix_name, port_ids_list)
+    port_pairs_ids_list = _create_port_pairs(postfix_name, port_ids_list)
+    pp_group_ids = _create_port_pair_groups(postfix_name, port_pairs_ids_list)
     p_chain_id = _create_port_chain(postfix_name, pp_group_ids, flow_classifier_id)
 
     return p_chain_id
@@ -88,7 +89,7 @@ def _create_flow_classifier(postfix_name, sfcr, logical_source_port):
     else:
         abort(400, req.json())
 
-def _create_port_pair_group(postfix_name, port_ids_list):
+def _create_port_pairs(postfix_name, port_ids_list):
     base_url = client.base_urls["network"]
     headers = {'X-Auth-Token': client.client.auth_token}
 
@@ -115,6 +116,12 @@ def _create_port_pair_group(postfix_name, port_ids_list):
                 abort(400, req.json())
 
         port_pairs_list.append(port_pairs)
+
+    return port_pairs_list
+
+def _create_port_pair_groups(postfix_name, port_pairs_list):
+    base_url = client.base_urls["network"]
+    headers = {'X-Auth-Token': client.client.auth_token}
 
     # create port pair group for each port_pairs
     port_pair_groups = []
