@@ -11,19 +11,20 @@ from flask import current_app
 
 vnf_cfg = cfg["openstack_client"]["vnf"]
 
-def create_sfc(fc_prefix, sfcr_id, logical_source_port, vnf_ids):
+def create_sfc(fc_prefix, sfcr_id, logical_source_port, vnf_ids_list):
     client.rset_auth_info()
 
-    if len(vnf_ids) == 0:
+    if len(vnf_ids_list) == 0:
         abort(400, "vnf list is empty")
 
     sfcr = active_requests.get(sfcr_id)
     if sfcr is None:
         abort(400, "no sfcr for the provided sfcr_id")
 
-    port_ids = []
-    for vnf_id in vnf_ids:
-        port_ids.append(_get_data_port(vnf_id))
+    port_ids_list = []
+    for vnf_ids in vnf_ids_list:
+        port_ids = [_get_data_port(vnf_id) for vnf_id in vnf_ids]
+        port_ids_list.append(port_ids)
 
     if fc_prefix:
         postfix_name = "{}_{}".format(fc_prefix, str(uuid.uuid4()))
@@ -31,8 +32,8 @@ def create_sfc(fc_prefix, sfcr_id, logical_source_port, vnf_ids):
         postfix_name = "{}".format(str(uuid.uuid4()))
 
     flow_classifier_id = _create_flow_classifier(postfix_name, sfcr, logical_source_port)
-    pp_group_id = _create_port_pair_group(postfix_name, port_ids)
-    p_chain_id = _create_port_chain(postfix_name, pp_group_id, flow_classifier_id)
+    pp_group_ids = _create_port_pair_group(postfix_name, port_ids_list)
+    p_chain_id = _create_port_chain(postfix_name, pp_group_ids, flow_classifier_id)
 
     return p_chain_id
 
@@ -87,36 +88,40 @@ def _create_flow_classifier(postfix_name, sfcr, logical_source_port):
     else:
         abort(400, req.json())
 
-def _create_port_pair_group(postfix_name, port_ids):
+def _create_port_pair_group(postfix_name, port_ids_list):
     base_url = client.base_urls["network"]
     headers = {'X-Auth-Token': client.client.auth_token}
 
     # create port_pairs from ports. Use the same port for ingress and egress
-    port_pairs = []
-    for i, port_id in enumerate(port_ids):
-        body = {
-                    "port_pair": {
-                        "ingress": port_id,
-                        "egress": port_id,
-                        "name": "pp_{}_{}".format(i, postfix_name),
+    port_pairs_list = []
+    for i, port_ids in enumerate(port_ids_list):
+        port_pairs = []
+        for j, port_id in enumerate(port_ids):
+            body = {
+                        "port_pair": {
+                            "ingress": port_id,
+                            "egress": port_id,
+                            "name": "pp_{}{}_{}".format(i, j, postfix_name),
+                        }
                     }
-                }
 
-        req = requests.post("{}{}".format(base_url, "/v2.0/sfc/port_pairs"),
-            json=body,
-            headers=headers)
+            req = requests.post("{}{}".format(base_url, "/v2.0/sfc/port_pairs"),
+                json=body,
+                headers=headers)
 
-        if req.status_code == 201:
-            port_pairs.append(req.json()["port_pair"]["id"])
-        else:
-            abort(400, req.json())
+            if req.status_code == 201:
+                port_pairs.append(req.json()["port_pair"]["id"])
+            else:
+                abort(400, req.json())
 
-    # create port pair group for each port pair
+        port_pairs_list.append(port_pairs)
+
+    # create port pair group for each port_pairs
     port_pair_groups = []
-    for i, port_pair in enumerate(port_pairs):
+    for i, port_pairs in enumerate(port_pairs_list):
         body = {
                     "port_pair_group": {
-                        "port_pairs": [port_pair],
+                        "port_pairs": port_pairs,
                         "name": "ppg_{}_{}".format(i, postfix_name),
                     }
                 }

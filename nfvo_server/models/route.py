@@ -15,7 +15,7 @@ class Route(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, sfc_name: str=None, sfcr_id: int=None, openstack_source_port: str=None, vnf_instance_ids: List[str]=None):  # noqa: E501
+    def __init__(self, sfc_name: str=None, sfcr_id: int=None, openstack_source_port: str=None, vnf_instance_ids: List[List[str]]=None):  # noqa: E501
         """Route - a model defined in Swagger
 
         :param sfc_name: The sfc_name of this Route.  # noqa: E501
@@ -25,13 +25,13 @@ class Route(Model):
         :param openstack_source_port: The openstack_source_port of this Route.  # noqa: E501
         :type openstack_source_port: str
         :param vnf_instance_ids: The vnf_instance_ids of this Route.  # noqa: E501
-        :type vnf_instance_ids: List[str]
+        :type vnf_instance_ids: List[List[str]]
         """
         self.swagger_types = {
             'sfc_name': str,
             'sfcr_id': int,
             'openstack_source_port': str,
-            'vnf_instance_ids': List[str]
+            'vnf_instance_ids': List[List[str]]
         }
 
         self.attribute_map = {
@@ -121,22 +121,24 @@ class Route(Model):
         self._openstack_source_port = openstack_source_port
 
     @property
-    def vnf_instance_ids(self) -> List[str]:
+    def vnf_instance_ids(self) -> List[List[str]]:
         """Gets the vnf_instance_ids of this Route.
 
+        each sub-list represent a node on the traffic path. each node is a list of vnf instances, where traffic are load-balanced  # noqa: E501
 
         :return: The vnf_instance_ids of this Route.
-        :rtype: List[str]
+        :rtype: List[List[str]]
         """
         return self._vnf_instance_ids
 
     @vnf_instance_ids.setter
-    def vnf_instance_ids(self, vnf_instance_ids: List[str]):
+    def vnf_instance_ids(self, vnf_instance_ids: List[List[str]]):
         """Sets the vnf_instance_ids of this Route.
 
+        each sub-list represent a node on the traffic path. each node is a list of vnf instances, where traffic are load-balanced  # noqa: E501
 
         :param vnf_instance_ids: The vnf_instance_ids of this Route.
-        :type vnf_instance_ids: List[str]
+        :type vnf_instance_ids: List[List[str]]
         """
 
         self._vnf_instance_ids = vnf_instance_ids

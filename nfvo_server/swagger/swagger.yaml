@@ -31,9 +31,9 @@ paths:
         schema:
           $ref: "#/definitions/SFCR"
       responses:
-        200:
+        "200":
           description: "Success."
-        400:
+        "400":
           description: "Invalid SFC request parameters supplied."
       x-swagger-router-controller: "nfvo_server.controllers.sfcr_controller"
   /routes:
@@ -50,7 +50,7 @@ paths:
       - "application/json"
       parameters: []
       responses:
-        200:
+        "200":
           description: "Success."
           schema:
             type: "array"
@@ -70,7 +70,7 @@ paths:
       - "application/json"
       parameters: []
       responses:
-        200:
+        "200":
           description: "Success."
           schema:
             type: "array"
@@ -97,11 +97,11 @@ paths:
         schema:
           $ref: "#/definitions/body"
       responses:
-        200:
+        "200":
           description: "Success."
           schema:
             type: "string"
-        400:
+        "400":
           description: "Invalid parameters supplied."
       x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
   /shutdown:
@@ -123,9 +123,9 @@ paths:
         schema:
           $ref: "#/definitions/Shutdown"
       responses:
-        200:
+        "200":
           description: "Success."
-        400:
+        "400":
           description: "Invalid parameters supplied."
       x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
   /setRoute:
@@ -147,9 +147,9 @@ paths:
         schema:
           $ref: "#/definitions/Route"
       responses:
-        200:
+        "200":
           description: "Success."
-        400:
+        "400":
           description: "Invalid parameters supplied."
       x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
 definitions:
@@ -223,13 +223,19 @@ definitions:
         type: "string"
       vnf_instance_ids:
         type: "array"
+        description: "each sub-list represent a node on the traffic path. each node\
+          \ is a list of vnf instances, where traffic are load-balanced"
         items:
-          type: "string"
+          type: "array"
+          items:
+            type: "string"
     description: "Detailed routing information for a given SFCR ID. sfc_name is optional."
     example:
       vnf_instance_ids:
-      - "vnf_instance_ids"
-      - "vnf_instance_ids"
+      - - "vnf_instance_ids"
+        - "vnf_instance_ids"
+      - - "vnf_instance_ids"
+        - "vnf_instance_ids"
       sfc_name: "sfc_name"
       sfcr_id: 0
       openstack_source_port: "openstack_source_port"
