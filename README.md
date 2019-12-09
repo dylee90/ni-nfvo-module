@@ -75,6 +75,10 @@ docker run -p 8181:8181 nfvo_server
 - Use swagger editor to export an updated YAML file (`File -> Save as YAML`) and generate both server and client code (`Generate Server -> python-flask`, `Generate Client -> python`).
 - Copy the three files into this directory and run `refresh.sh`.
 
+## Create vnfflavor
+Currently, creating vnfflavor is the same as openstack flavor, plus that metadata should contains two custom fields: `os_image_id` - the openstack image id of the vnf, and `default_user_data` - the default user data to configure the vnf at the start (e.g., cloud config, commands to run at start).
+
+
 [1] https://editor.swagger.io/
 
 
