@@ -85,7 +85,7 @@ def _create_flow_classifier(postfix_name, sfcr, logical_source_port):
     if req.status_code == 201:
         return req.json()["flow_classifier"]["id"]
     else:
-        abort(req.status_code, req.json())
+        abort(req.status_code, req.text)
 
 def _create_port_pairs(postfix_name, port_ids_list):
     # create port_pairs from ports. Use the same port for ingress and egress
@@ -108,7 +108,7 @@ def _create_port_pairs(postfix_name, port_ids_list):
             if req.status_code == 201:
                 port_pairs.append(req.json()["port_pair"]["id"])
             else:
-                abort(req.status_code, req.json())
+                abort(req.status_code, req.text)
 
         port_pairs_list.append(port_pairs)
 
@@ -132,7 +132,7 @@ def _create_port_pair_groups(postfix_name, port_pairs_list):
         if req.status_code == 201:
             port_pair_groups.append(req.json()["port_pair_group"]["id"])
         else:
-            abort(req.status_code, req.json())
+            abort(req.status_code, req.text)
 
     return port_pair_groups
 
@@ -152,7 +152,7 @@ def _create_port_chain(postfix_name, port_pair_groups, flow_classifiers):
     if req.status_code == 201:
         return req.json()["port_chain"]["id"]
     else:
-        abort(req.status_code, req.json())
+        abort(req.status_code, req.text)
 
 
 def delete_sfc(port_chain_id):
