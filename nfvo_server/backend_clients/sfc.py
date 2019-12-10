@@ -10,16 +10,20 @@ from flask import abort
 from flask import current_app
 
 vnf_cfg = cfg["openstack_client"]["vnf"]
+base_url = client.base_urls["network"]
+headers = {'X-Auth-Token': client.client.auth_token}
+
 
 def create_sfc(fc_prefix, sfcr_id, logical_source_port, vnf_ids_list):
     client.rset_auth_info()
+    headers = {'X-Auth-Token': client.client.auth_token}
 
     if len(vnf_ids_list) == 0:
-        abort(400, "vnf list is empty")
+        abort(req.status_code, "vnf list is empty")
 
     sfcr = active_requests.get(sfcr_id)
     if sfcr is None:
-        abort(400, "no sfcr for the provided sfcr_id")
+        abort(req.status_code, "no sfcr for the provided sfcr_id")
 
     port_ids_list = []
     for vnf_ids in vnf_ids_list:
@@ -39,10 +43,7 @@ def create_sfc(fc_prefix, sfcr_id, logical_source_port, vnf_ids_list):
     return p_chain_id
 
 def _get_data_port(vnf_instance_id):
-    base_url = client.base_urls["network"]
     url = "v2.0/ports?device_id={}".format(vnf_instance_id)
-    headers = {'X-Auth-Token': client.client.auth_token}
-
     req = requests.get("{}{}".format(base_url, url),
         headers=headers)
     req = req.json()
@@ -51,13 +52,10 @@ def _get_data_port(vnf_instance_id):
         if port["network_id"] == vnf_cfg["data_net_id"]:
             return port["id"]
 
-    abort(400, "no data port for vnf id: {}".format(vnf_instance_id))
+    abort(req.status_code, "no data port for vnf id: {}".format(vnf_instance_id))
 
 def _create_flow_classifier(postfix_name, sfcr, logical_source_port):
-    base_url = client.base_urls["network"]
     url = "/v2.0/sfc/flow_classifiers"
-    headers = {'X-Auth-Token': client.client.auth_token}
-
     body = dict()
     # logical_source_port is required
     body["logical_source_port"] = logical_source_port
@@ -87,12 +85,9 @@ def _create_flow_classifier(postfix_name, sfcr, logical_source_port):
     if req.status_code == 201:
         return req.json()["flow_classifier"]["id"]
     else:
-        abort(400, req.json())
+        abort(req.status_code, req.json())
 
 def _create_port_pairs(postfix_name, port_ids_list):
-    base_url = client.base_urls["network"]
-    headers = {'X-Auth-Token': client.client.auth_token}
-
     # create port_pairs from ports. Use the same port for ingress and egress
     port_pairs_list = []
     for i, port_ids in enumerate(port_ids_list):
@@ -113,16 +108,13 @@ def _create_port_pairs(postfix_name, port_ids_list):
             if req.status_code == 201:
                 port_pairs.append(req.json()["port_pair"]["id"])
             else:
-                abort(400, req.json())
+                abort(req.status_code, req.json())
 
         port_pairs_list.append(port_pairs)
 
     return port_pairs_list
 
 def _create_port_pair_groups(postfix_name, port_pairs_list):
-    base_url = client.base_urls["network"]
-    headers = {'X-Auth-Token': client.client.auth_token}
-
     # create port pair group for each port_pairs
     port_pair_groups = []
     for i, port_pairs in enumerate(port_pairs_list):
@@ -140,15 +132,11 @@ def _create_port_pair_groups(postfix_name, port_pairs_list):
         if req.status_code == 201:
             port_pair_groups.append(req.json()["port_pair_group"]["id"])
         else:
-            abort(400, req.json())
+            abort(req.status_code, req.json())
 
     return port_pair_groups
 
 def _create_port_chain(postfix_name, port_pair_groups, flow_classifiers):
-    base_url = client.base_urls["network"]
-    url = "/v2.0/sfc/port_chains"
-    headers = {'X-Auth-Token': client.client.auth_token}
-
     body = {
                 "port_chain": {
                     "flow_classifiers": flow_classifiers,
@@ -157,11 +145,77 @@ def _create_port_chain(postfix_name, port_pair_groups, flow_classifiers):
                 }
             }
 
-    req = requests.post("{}{}".format(base_url, url),
+    req = requests.post("{}{}".format(base_url, "/v2.0/sfc/port_chains"),
         json=body,
         headers=headers)
 
     if req.status_code == 201:
         return req.json()["port_chain"]["id"]
     else:
-        abort(400, req.json())
+        abort(req.status_code, req.json())
+
+
+def delete_sfc(port_chain_id):
+    client.rset_auth_info()
+    headers = {'X-Auth-Token': client.client.auth_token}
+    _delete_port_chain_recursive(port_chain_id)
+
+def _delete_port_chain_recursive(port_chain_id):
+    url = "/v2.0/sfc/port_chains"
+    req = requests.get("{}{}/{}".format(base_url, url, port_chain_id),
+        headers=headers)
+    if req.status_code != 200:
+        abort(req.status_code, req.text)
+    req = req.json()
+    port_pair_groups = req["port_chain"]["port_pair_groups"]
+    flow_classifiers = req["port_chain"]["flow_classifiers"]
+
+    _delete_port_chain(port_chain_id)
+
+    for port_pair_group in port_pair_groups:
+        _delete_port_pair_group_recursive(port_pair_group)
+
+    for flow_classifier in flow_classifiers:
+        _delete_flow_classifier(flow_classifier)
+
+def _delete_port_chain(port_chain_id):
+    url = "/v2.0/sfc/port_chains"
+    req = requests.delete("{}{}/{}".format(base_url, url, port_chain_id),
+        headers=headers)
+    if req.status_code != 204:
+        abort(req.status_code, req.text)
+
+def _delete_port_pair(port_pair_id):
+    url = "/v2.0/sfc/port-pairs"
+    req = requests.delete("{}{}/{}".format(base_url, url, port_pair_id),
+        headers=headers)
+    if req.status_code != 204:
+        abort(req.status_code, req.text)
+
+def _delete_port_pair_group_recursive(port_pair_group_id):
+    url = "/v2.0/sfc/port_pair_groups"
+    req = requests.get("{}{}/{}".format(base_url, url, port_pair_group_id),
+        headers=headers)
+    if req.status_code != 200:
+        abort(req.status_code, req.text)
+    req = req.json()
+    port_pairs = req["port_pair_group"]["port_pairs"]
+
+    _delete_port_pair_group(port_pair_group_id)
+
+    for port_pair in port_pairs:
+        _delete_port_pair(port_pair)
+
+def _delete_port_pair_group(port_pair_group_id):
+    url = "/v2.0/sfc/port_pair_groups"
+    req = requests.delete("{}{}/{}".format(base_url, url, port_pair_group_id),
+        headers=headers)
+    if req.status_code != 204:
+        abort(req.status_code, req.text)
+
+def _delete_flow_classifier(flow_classifier_id):
+    url = "/v2.0/sfc/flow_classifiers"
+    req = requests.delete("{}{}/{}".format(base_url, url, flow_classifier_id),
+        headers=headers)
+    if req.status_code != 204:
+        abort(req.status_code, req.text)

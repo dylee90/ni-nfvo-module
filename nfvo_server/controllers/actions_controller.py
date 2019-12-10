@@ -5,12 +5,12 @@ from threading import Timer
 
 from nfvo_server.models.body import Body  # noqa: E501
 from nfvo_server.models.route import Route  # noqa: E501
+from nfvo_server.models.route_id import RouteID  # noqa: E501
 from nfvo_server.models.shutdown import Shutdown  # noqa: E501
 from nfvo_server import util
 
-from nfvo_server.controllers.sfcr_controller import get_active_requests, get_time_of_last_arrival
 from nfvo_server.backend_clients.server import create_server, stop_server
-from nfvo_server.backend_clients.sfc import create_sfc
+from nfvo_server.backend_clients.sfc import create_sfc, delete_sfc
 
 from nfvo_server.controllers.info_controller import routes
 
@@ -35,39 +35,42 @@ def deploy_vnf(body):  # noqa: E501
 
     :rtype: str
     """
-    if connexion.request.is_json:
-        body = Body.from_dict(connexion.request.get_json())  # noqa: E501
-        print("[ actions_controller ] Received deployment request: %s.\n" % str(body))
-        print("[ actions_controller ] Deploying VNF %s on node id %s.\n" % (body.flavor_id, body.node_name))
-        try:
-            current_sfcr = get_active_requests()[-1]
-            timediff = (datetime.datetime.now() - get_time_of_last_arrival()).total_seconds()
-            print("[ actions_contoller ] Time between arrival and deployment action: %f" % timediff)
-            t = Timer(3, notify_trafgen, [current_sfcr])
-            t.start()
-        except Exception as e:
-            print("[ actions_controller ] Error: %s.\n" % e)
 
     return create_server(body.vnf_name, body.flavor_id, body.node_name, body.user_data)
 
-
-def set_route(body):  # noqa: E501
-    """Route a request via the provided route.
+def del_route(route_id):  # noqa: E501
+    """Delete a Route.
 
      # noqa: E501
 
-    :param body: Route information including SFCR ID and hops.
-    :type body: dict | bytes
+    :param route_id:
+    :type route_id: dict | bytes
 
     :rtype: None
     """
     if connexion.request.is_json:
+        route_id = RouteID.from_dict(connexion.request.get_json())  # noqa: E501
+    delete_sfc(route_id.id)
+    # del routes[route_id]
+
+
+def set_route(body):  # noqa: E501
+    """Route a request via the provided route. Return route id if success (which also means input route id is ommitted).
+
+     # noqa: E501
+
+    :param body: Route information including SFCR ID and vnf instance ids.
+    :type body: dict | bytes
+
+    :rtype: str
+    """
+    if connexion.request.is_json:
         body = Route.from_dict(connexion.request.get_json())  # noqa: E501
-    ret = create_sfc(body.sfc_name, body.sfcr_id, body.openstack_source_port, body.vnf_instance_ids)
+    route_id = create_sfc(body.sfc_name, body.sfcr_id, body.openstack_source_port, body.vnf_instance_ids)
+    body.id = route_id
+    routes[route_id] = body
 
-    routes.append(body)
-
-    return ret
+    return route_id
 
 
 def shutdown_vnf(body):  # noqa: E501

@@ -15,7 +15,7 @@ class TestSfcrController(BaseTestCase):
     def test_add_sfcr(self):
         """Test case for add_sfcr
 
-        Add new SFC request.
+        Add new SFC request. id field is optional
         """
         body = SFCR()
         response = self.client.open(

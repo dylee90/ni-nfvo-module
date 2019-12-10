@@ -4,20 +4,17 @@ import six
 import time
 
 from nfvo_server.models.sfcr import SFCR  # noqa: E501
+from nfvo_server.controllers.info_controller import active_requests
 from nfvo_server import util
 
 import ai_module_client as swagc_ai
 
-active_requests = dict()
+
 time_of_last_arrival = datetime.datetime.now()
 
 def get_time_of_last_arrival():
     global time_of_last_arrival
     return time_of_last_arrival
-
-def get_active_requests():
-    global active_requests
-    return list(active_requests.values())
 
 
 def notify_ai_module():
@@ -49,5 +46,6 @@ def add_sfcr(body):  # noqa: E501
         # print("class of body: %s" % body.__class__)
         print("[ sfcr_controller ] Notifying AI module of arrival.\n")
         notify_ai_module()
+
         active_requests[body.id] = body
     return 'do some magic!'

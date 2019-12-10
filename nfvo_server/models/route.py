@@ -15,9 +15,11 @@ class Route(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, sfc_name: str=None, sfcr_id: int=None, openstack_source_port: str=None, vnf_instance_ids: List[List[str]]=None):  # noqa: E501
+    def __init__(self, id: str=None, sfc_name: str=None, sfcr_id: int=None, openstack_source_port: str=None, vnf_instance_ids: List[List[str]]=None):  # noqa: E501
         """Route - a model defined in Swagger
 
+        :param id: The id of this Route.  # noqa: E501
+        :type id: str
         :param sfc_name: The sfc_name of this Route.  # noqa: E501
         :type sfc_name: str
         :param sfcr_id: The sfcr_id of this Route.  # noqa: E501
@@ -28,6 +30,7 @@ class Route(Model):
         :type vnf_instance_ids: List[List[str]]
         """
         self.swagger_types = {
+            'id': str,
             'sfc_name': str,
             'sfcr_id': int,
             'openstack_source_port': str,
@@ -35,12 +38,14 @@ class Route(Model):
         }
 
         self.attribute_map = {
+            'id': 'id',
             'sfc_name': 'sfc_name',
             'sfcr_id': 'sfcr_id',
             'openstack_source_port': 'openstack_source_port',
             'vnf_instance_ids': 'vnf_instance_ids'
         }
 
+        self._id = id
         self._sfc_name = sfc_name
         self._sfcr_id = sfcr_id
         self._openstack_source_port = openstack_source_port
@@ -56,6 +61,27 @@ class Route(Model):
         :rtype: Route
         """
         return util.deserialize_model(dikt, cls)
+
+    @property
+    def id(self) -> str:
+        """Gets the id of this Route.
+
+
+        :return: The id of this Route.
+        :rtype: str
+        """
+        return self._id
+
+    @id.setter
+    def id(self, id: str):
+        """Sets the id of this Route.
+
+
+        :param id: The id of this Route.
+        :type id: str
+        """
+
+        self._id = id
 
     @property
     def sfc_name(self) -> str:

@@ -16,7 +16,7 @@ paths:
     post:
       tags:
       - "sfcr"
-      summary: "Add new SFC request."
+      summary: "Add new SFC request. id field is optional"
       description: ""
       operationId: "add_sfcr"
       consumes:
@@ -132,7 +132,8 @@ paths:
     post:
       tags:
       - "actions"
-      summary: "Route a request via the provided route."
+      summary: "Route a request via the provided route. Return route id if success\
+        \ (which also means input route id is ommitted)."
       description: ""
       operationId: "set_route"
       consumes:
@@ -149,8 +150,31 @@ paths:
       responses:
         "200":
           description: "Success."
+          schema:
+            type: "string"
         "400":
           description: "Invalid parameters supplied."
+      x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
+  /delRoute:
+    post:
+      tags:
+      - "actions"
+      summary: "Delete a Route."
+      description: ""
+      operationId: "del_route"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "route_id"
+        required: true
+        schema:
+          $ref: "#/definitions/RouteID"
+      responses:
+        "200":
+          description: "Success."
       x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
 definitions:
   SFCR:
@@ -214,6 +238,8 @@ definitions:
   Route:
     type: "object"
     properties:
+      id:
+        type: "string"
       sfc_name:
         type: "string"
       sfcr_id:
@@ -237,6 +263,7 @@ definitions:
       - - "vnf_instance_ids"
         - "vnf_instance_ids"
       sfc_name: "sfc_name"
+      id: "id"
       sfcr_id: 0
       openstack_source_port: "openstack_source_port"
   Shutdown:
@@ -247,6 +274,14 @@ definitions:
     description: "vnf instance id to shutdown."
     example:
       vnf_instance_id: "vnf_instance_id"
+  RouteID:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+    description: "route id."
+    example:
+      id: "id"
   body:
     type: "object"
     properties:
