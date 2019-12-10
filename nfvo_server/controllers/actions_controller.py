@@ -35,6 +35,8 @@ def deploy_vnf(body):  # noqa: E501
 
     :rtype: str
     """
+    if connexion.request.is_json:
+        body = Body.from_dict(connexion.request.get_json())  # noqa: E501
 
     return create_server(body.vnf_name, body.flavor_id, body.node_name, body.user_data)
 
