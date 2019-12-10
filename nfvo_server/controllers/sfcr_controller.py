@@ -2,6 +2,7 @@ import connexion
 import datetime
 import six
 import time
+import uuid
 
 from nfvo_server.models.sfcr import SFCR  # noqa: E501
 from nfvo_server.controllers.info_controller import active_requests
@@ -47,5 +48,5 @@ def add_sfcr(body):  # noqa: E501
         print("[ sfcr_controller ] Notifying AI module of arrival.\n")
         notify_ai_module()
 
+        body.id = str(uuid.uuid4())
         active_requests[body.id] = body
-    return 'do some magic!'
