@@ -5,7 +5,7 @@ import time
 import uuid
 
 from nfvo_server.models.sfcr import SFCR  # noqa: E501
-from nfvo_server.controllers.info_controller import active_requests
+from nfvo_server.database import db
 from nfvo_server import util
 
 import ai_module_client as swagc_ai
@@ -49,4 +49,4 @@ def add_sfcr(body):  # noqa: E501
         notify_ai_module()
 
         body.id = str(uuid.uuid4())
-        active_requests[body.id] = body
+        db.insert_active_request(body)

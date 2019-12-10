@@ -12,7 +12,7 @@ from nfvo_server import util
 from nfvo_server.backend_clients.server import create_server, stop_server
 from nfvo_server.backend_clients.sfc import create_sfc, delete_sfc
 
-from nfvo_server.controllers.info_controller import routes
+from nfvo_server.database import db
 
 import trafgen_module_client as swagc_trafgen
 
@@ -51,7 +51,7 @@ def del_route(route_id):  # noqa: E501
     if connexion.request.is_json:
         route_id = RouteID.from_dict(connexion.request.get_json())  # noqa: E501
     delete_sfc(route_id.id)
-    # del routes[route_id]
+    db.del_route(route_id.id)
 
 
 def set_route(body):  # noqa: E501
@@ -68,7 +68,7 @@ def set_route(body):  # noqa: E501
         body = Route.from_dict(connexion.request.get_json())  # noqa: E501
     route_id = create_sfc(body.sfc_name, body.sfcr_id, body.openstack_source_port, body.vnf_instance_ids)
     body.id = route_id
-    routes[route_id] = body
+    db.insert_route(body)
 
     return route_id
 

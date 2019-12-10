@@ -15,11 +15,11 @@ class SFCR(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, id: int=None, arrivaltime: datetime=None, src_ip_prefix: str=None, dst_ip_prefix: str=None, src_port_min: int=None, src_port_max: int=None, dst_port_min: int=None, dst_port_max: int=None, bw: int=None, delay: int=None, duration: int=None, proto: str=None, nf_chain: List[str]=None):  # noqa: E501
+    def __init__(self, id: str=None, arrivaltime: datetime=None, src_ip_prefix: str=None, dst_ip_prefix: str=None, src_port_min: int=None, src_port_max: int=None, dst_port_min: int=None, dst_port_max: int=None, bw: int=None, delay: int=None, duration: int=None, proto: str=None, nf_chain: List[str]=None):  # noqa: E501
         """SFCR - a model defined in Swagger
 
         :param id: The id of this SFCR.  # noqa: E501
-        :type id: int
+        :type id: str
         :param arrivaltime: The arrivaltime of this SFCR.  # noqa: E501
         :type arrivaltime: datetime
         :param src_ip_prefix: The src_ip_prefix of this SFCR.  # noqa: E501
@@ -46,7 +46,7 @@ class SFCR(Model):
         :type nf_chain: List[str]
         """
         self.swagger_types = {
-            'id': int,
+            'id': str,
             'arrivaltime': datetime,
             'src_ip_prefix': str,
             'dst_ip_prefix': str,
@@ -103,22 +103,22 @@ class SFCR(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def id(self) -> int:
+    def id(self) -> str:
         """Gets the id of this SFCR.
 
 
         :return: The id of this SFCR.
-        :rtype: int
+        :rtype: str
         """
         return self._id
 
     @id.setter
-    def id(self, id: int):
+    def id(self, id: str):
         """Sets the id of this SFCR.
 
 
         :param id: The id of this SFCR.
-        :type id: int
+        :type id: str
         """
 
         self._id = id

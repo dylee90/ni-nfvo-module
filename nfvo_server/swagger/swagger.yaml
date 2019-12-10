@@ -181,8 +181,7 @@ definitions:
     type: "object"
     properties:
       id:
-        type: "integer"
-        format: "int64"
+        type: "string"
       arrivaltime:
         type: "string"
         format: "date-time"
@@ -220,20 +219,20 @@ definitions:
     description: "SFC request. src/dst ip prefix, src/dst port min/max, proto are\
       \ optional."
     example:
-      src_port_max: 1
+      src_port_max: 6
       dst_ip_prefix: "dst_ip_prefix"
       nf_chain:
       - "nf_chain"
       - "nf_chain"
       src_ip_prefix: "src_ip_prefix"
-      src_port_min: 6
-      duration: 9
-      dst_port_min: 5
-      delay: 7
-      bw: 2
+      src_port_min: 0
+      duration: 7
+      dst_port_min: 1
+      delay: 2
+      bw: 5
       proto: "proto"
       arrivaltime: "2000-01-23T04:56:07.000+00:00"
-      id: 0
+      id: "id"
       dst_port_max: 5
   Route:
     type: "object"
@@ -243,8 +242,7 @@ definitions:
       sfc_name:
         type: "string"
       sfcr_id:
-        type: "integer"
-        format: "int64"
+        type: "string"
       openstack_source_port:
         type: "string"
       vnf_instance_ids:
@@ -264,7 +262,7 @@ definitions:
         - "vnf_instance_ids"
       sfc_name: "sfc_name"
       id: "id"
-      sfcr_id: 0
+      sfcr_id: "sfcr_id"
       openstack_source_port: "openstack_source_port"
   Shutdown:
     type: "object"

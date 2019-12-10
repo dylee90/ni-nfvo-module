@@ -3,8 +3,8 @@ import requests
 import uuid
 
 from nfvo_server.config import cfg
-from nfvo_server.controllers.sfcr_controller import active_requests
 from nfvo_server.backend_clients.utils import openstack_client as client
+from nfvo_server.database import db
 
 from flask import abort
 from flask import current_app
@@ -21,7 +21,7 @@ def create_sfc(fc_prefix, sfcr_id, logical_source_port, vnf_ids_list):
     if len(vnf_ids_list) == 0:
         abort(req.status_code, "vnf list is empty")
 
-    sfcr = active_requests.get(sfcr_id)
+    sfcr = db.get_active_request(sfcr_id)
     if sfcr is None:
         abort(req.status_code, "no sfcr for the provided sfcr_id")
 

@@ -3,13 +3,8 @@ import six
 
 from nfvo_server.models.route import Route  # noqa: E501
 from nfvo_server.models.sfcr import SFCR  # noqa: E501
+from nfvo_server.database import db
 from nfvo_server import util
-
-
-# TODO: store route & active requests in a db (tinydb?)
-routes = dict()
-active_requests = dict()
-
 
 def get_requests():  # noqa: E501
     """Get currently active SFC requests.
@@ -19,7 +14,7 @@ def get_requests():  # noqa: E501
 
     :rtype: List[SFCR]
     """
-    return list(active_requests.values())
+    return db.get_all_active_requests()
 
 
 def get_routes():  # noqa: E501
@@ -30,4 +25,4 @@ def get_routes():  # noqa: E501
 
     :rtype: List[Route]
     """
-    return list(routes.values())
+    return db.get_all_routes()

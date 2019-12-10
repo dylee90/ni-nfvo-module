@@ -15,7 +15,7 @@ class Route(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, id: str=None, sfc_name: str=None, sfcr_id: int=None, openstack_source_port: str=None, vnf_instance_ids: List[List[str]]=None):  # noqa: E501
+    def __init__(self, id: str=None, sfc_name: str=None, sfcr_id: str=None, openstack_source_port: str=None, vnf_instance_ids: List[List[str]]=None):  # noqa: E501
         """Route - a model defined in Swagger
 
         :param id: The id of this Route.  # noqa: E501
@@ -23,7 +23,7 @@ class Route(Model):
         :param sfc_name: The sfc_name of this Route.  # noqa: E501
         :type sfc_name: str
         :param sfcr_id: The sfcr_id of this Route.  # noqa: E501
-        :type sfcr_id: int
+        :type sfcr_id: str
         :param openstack_source_port: The openstack_source_port of this Route.  # noqa: E501
         :type openstack_source_port: str
         :param vnf_instance_ids: The vnf_instance_ids of this Route.  # noqa: E501
@@ -32,7 +32,7 @@ class Route(Model):
         self.swagger_types = {
             'id': str,
             'sfc_name': str,
-            'sfcr_id': int,
+            'sfcr_id': str,
             'openstack_source_port': str,
             'vnf_instance_ids': List[List[str]]
         }
@@ -105,22 +105,22 @@ class Route(Model):
         self._sfc_name = sfc_name
 
     @property
-    def sfcr_id(self) -> int:
+    def sfcr_id(self) -> str:
         """Gets the sfcr_id of this Route.
 
 
         :return: The sfcr_id of this Route.
-        :rtype: int
+        :rtype: str
         """
         return self._sfcr_id
 
     @sfcr_id.setter
-    def sfcr_id(self, sfcr_id: int):
+    def sfcr_id(self, sfcr_id: str):
         """Sets the sfcr_id of this Route.
 
 
         :param sfcr_id: The sfcr_id of this Route.
-        :type sfcr_id: int
+        :type sfcr_id: str
         """
 
         self._sfcr_id = sfcr_id
