@@ -32,6 +32,12 @@ query = Query()
 def insert_route(route):
     routes.insert(route.to_dict())
 
+def update_route(route):
+    routes.upsert(route.to_dict(), query.id == route.id)
+
+def update_active_request(active_request):
+    active_requests.upsert(active_request.to_dict(), query.id == active_request.id)
+
 def insert_active_request(active_request):
     active_requests.insert(active_request.to_dict())
 

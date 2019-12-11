@@ -6,5 +6,6 @@ from __future__ import absolute_import
 from nfvo_server.models.body import Body
 from nfvo_server.models.route import Route
 from nfvo_server.models.route_id import RouteID
+from nfvo_server.models.route_update import RouteUpdate
 from nfvo_server.models.sfcr import SFCR
 from nfvo_server.models.vnfid import VNFID

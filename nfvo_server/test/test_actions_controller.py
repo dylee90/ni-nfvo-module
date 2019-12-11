@@ -8,6 +8,7 @@ from six import BytesIO
 from nfvo_server.models.body import Body  # noqa: E501
 from nfvo_server.models.route import Route  # noqa: E501
 from nfvo_server.models.route_id import RouteID  # noqa: E501
+from nfvo_server.models.route_update import RouteUpdate  # noqa: E501
 from nfvo_server.models.vnfid import VNFID  # noqa: E501
 from nfvo_server.test import BaseTestCase
 
@@ -79,6 +80,20 @@ class TestActionsController(BaseTestCase):
         body = VNFID()
         response = self.client.open(
             '/v2/shutdown_vnf',
+            method='POST',
+            data=json.dumps(body),
+            content_type='application/json')
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+    def test_update_route(self):
+        """Test case for update_route
+
+        Update a route path.
+        """
+        body = RouteUpdate()
+        response = self.client.open(
+            '/v2/update_route',
             method='POST',
             data=json.dumps(body),
             content_type='application/json')

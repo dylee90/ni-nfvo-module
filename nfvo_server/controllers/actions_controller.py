@@ -6,11 +6,12 @@ from threading import Timer
 from nfvo_server.models.body import Body  # noqa: E501
 from nfvo_server.models.route import Route  # noqa: E501
 from nfvo_server.models.route_id import RouteID  # noqa: E501
+from nfvo_server.models.route_update import RouteUpdate  # noqa: E501
 from nfvo_server.models.vnfid import VNFID  # noqa: E501
 from nfvo_server import util
 
 from nfvo_server.backend_clients.server import create_server, stop_server, destroy_server
-from nfvo_server.backend_clients.sfc import create_sfc, delete_sfc
+from nfvo_server.backend_clients.sfc import create_sfc, delete_sfc, update_sfc
 
 from nfvo_server.database import db
 
@@ -39,6 +40,20 @@ def deploy_vnf(body):  # noqa: E501
         body = Body.from_dict(connexion.request.get_json())  # noqa: E501
 
     return create_server(body.vnf_name, body.flavor_id, body.node_name, body.user_data)
+
+def shutdown_vnf(body):  # noqa: E501
+    """Shut down a VNF instance.
+
+     # noqa: E501
+
+    :param body: ID of VNF instance to be shut down.
+    :type body: dict | bytes
+
+    :rtype: None
+    """
+    if connexion.request.is_json:
+        body = VNFID.from_dict(connexion.request.get_json())  # noqa: E501
+    return stop_server(body.id)
 
 def destroy_vnf(body):  # noqa: E501
     """Destroy a VNF instance.
@@ -88,17 +103,16 @@ def set_route(body):  # noqa: E501
 
     return route_id
 
-
-def shutdown_vnf(body):  # noqa: E501
-    """Shut down a VNF instance.
+def update_route(body):  # noqa: E501
+    """Update a route path.
 
      # noqa: E501
 
-    :param body: ID of VNF instance to be shut down.
+    :param body: New route path.
     :type body: dict | bytes
 
-    :rtype: None
+    :rtype: str
     """
     if connexion.request.is_json:
-        body = VNFID.from_dict(connexion.request.get_json())  # noqa: E501
-    return stop_server(body.id)
+        body = RouteUpdate.from_dict(connexion.request.get_json())  # noqa: E501
+    return update_sfc(body.route_id, body.vnf_instance_ids)

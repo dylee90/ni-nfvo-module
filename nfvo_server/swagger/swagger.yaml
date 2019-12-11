@@ -179,6 +179,32 @@ paths:
         "400":
           description: "Invalid parameters supplied."
       x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
+  /update_route:
+    post:
+      tags:
+      - "actions"
+      summary: "Update a route path."
+      description: ""
+      operationId: "update_route"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "New route path."
+        required: true
+        schema:
+          $ref: "#/definitions/RouteUpdate"
+      responses:
+        "200":
+          description: "Success."
+          schema:
+            type: "string"
+        "400":
+          description: "Invalid parameters supplied."
+      x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
   /del_route:
     post:
       tags:
@@ -288,6 +314,27 @@ definitions:
       id: "id"
       sfcr_id: "sfcr_id"
       openstack_source_port: "openstack_source_port"
+  RouteUpdate:
+    type: "object"
+    properties:
+      route_id:
+        type: "string"
+      vnf_instance_ids:
+        type: "array"
+        description: "each sub-list represent a node on the traffic path. each node\
+          \ is a list of vnf instances, where traffic are load-balanced"
+        items:
+          type: "array"
+          items:
+            type: "string"
+    description: "update the path of a route."
+    example:
+      vnf_instance_ids:
+      - - "vnf_instance_ids"
+        - "vnf_instance_ids"
+      - - "vnf_instance_ids"
+        - "vnf_instance_ids"
+      route_id: "route_id"
   RouteID:
     type: "object"
     properties:
