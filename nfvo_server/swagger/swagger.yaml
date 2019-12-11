@@ -77,7 +77,7 @@ paths:
             items:
               $ref: "#/definitions/SFCR"
       x-swagger-router-controller: "nfvo_server.controllers.info_controller"
-  /deploy:
+  /deploy_vnf:
     post:
       tags:
       - "actions"
@@ -104,7 +104,7 @@ paths:
         "400":
           description: "Invalid parameters supplied."
       x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
-  /shutdown:
+  /shutdown_vnf:
     post:
       tags:
       - "actions"
@@ -121,14 +121,38 @@ paths:
         description: "ID of VNF instance to be shut down."
         required: true
         schema:
-          $ref: "#/definitions/Shutdown"
+          $ref: "#/definitions/VNFID"
       responses:
         "200":
           description: "Success."
         "400":
           description: "Invalid parameters supplied."
       x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
-  /setRoute:
+  /destroy_vnf:
+    post:
+      tags:
+      - "actions"
+      summary: "Destroy a VNF instance."
+      description: ""
+      operationId: "destroy_vnf"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "ID of VNF instance to be destroyed."
+        required: true
+        schema:
+          $ref: "#/definitions/VNFID"
+      responses:
+        "200":
+          description: "Success."
+        "400":
+          description: "Invalid parameters supplied."
+      x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
+  /set_route:
     post:
       tags:
       - "actions"
@@ -155,7 +179,7 @@ paths:
         "400":
           description: "Invalid parameters supplied."
       x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
-  /delRoute:
+  /del_route:
     post:
       tags:
       - "actions"
@@ -264,20 +288,20 @@ definitions:
       id: "id"
       sfcr_id: "sfcr_id"
       openstack_source_port: "openstack_source_port"
-  Shutdown:
-    type: "object"
-    properties:
-      vnf_instance_id:
-        type: "string"
-    description: "vnf instance id to shutdown."
-    example:
-      vnf_instance_id: "vnf_instance_id"
   RouteID:
     type: "object"
     properties:
       id:
         type: "string"
     description: "route id."
+    example:
+      id: "id"
+  VNFID:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+    description: "VNF id."
     example:
       id: "id"
   body:

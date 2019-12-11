@@ -19,8 +19,8 @@ def create_server(server_prefix, flavor_id, host_name, custom_user_data):
     url = "/flavors/{flavors_id}/os-extra_specs".format(flavors_id=flavor_id)
     req = requests.get("{}{}".format(base_url, url),
         headers=headers)
-    if not req.status_code == 200:
-        return req.json(), req.status_code
+    if req.status_code != 200:
+        abort(req.status_code, req.text)
 
     extra_specs = req.json()
     try:
@@ -63,7 +63,7 @@ def create_server(server_prefix, flavor_id, host_name, custom_user_data):
     if req.status_code == 202:
         return req.json()["server"]["id"], 200
     else:
-        return req.json(), req.status_code
+        abort(req.status_code, req.text)
 
 def stop_server(server_id):
     client.rset_auth_info()
@@ -80,7 +80,18 @@ def stop_server(server_id):
         json=data,
         headers=headers)
 
-    if req.status_code == 202:
-        return "Success", 200
-    else:
-        return req.json(), req.status_code
+    if req.status_code != 202:
+        abort(req.status_code, req.text)
+
+def destroy_server(server_id):
+    client.rset_auth_info()
+
+    base_url = client.base_urls["compute"]
+    url = "/servers/{}".format(server_id)
+    headers = {'X-Auth-Token': client.client.auth_token}
+
+    req = requests.delete("{}{}".format(base_url, url),
+        headers=headers)
+
+    if req.status_code != 204:
+        abort(req.status_code, req.text)

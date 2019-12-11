@@ -8,7 +8,7 @@ from six import BytesIO
 from nfvo_server.models.body import Body  # noqa: E501
 from nfvo_server.models.route import Route  # noqa: E501
 from nfvo_server.models.route_id import RouteID  # noqa: E501
-from nfvo_server.models.shutdown import Shutdown  # noqa: E501
+from nfvo_server.models.vnfid import VNFID  # noqa: E501
 from nfvo_server.test import BaseTestCase
 
 
@@ -22,7 +22,7 @@ class TestActionsController(BaseTestCase):
         """
         route_id = RouteID()
         response = self.client.open(
-            '/v2/delRoute',
+            '/v2/del_route',
             method='POST',
             data=json.dumps(route_id),
             content_type='application/json')
@@ -36,7 +36,21 @@ class TestActionsController(BaseTestCase):
         """
         body = Body()
         response = self.client.open(
-            '/v2/deploy',
+            '/v2/deploy_vnf',
+            method='POST',
+            data=json.dumps(body),
+            content_type='application/json')
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+    def test_destroy_vnf(self):
+        """Test case for destroy_vnf
+
+        Destroy a VNF instance.
+        """
+        body = VNFID()
+        response = self.client.open(
+            '/v2/destroy_vnf',
             method='POST',
             data=json.dumps(body),
             content_type='application/json')
@@ -50,7 +64,7 @@ class TestActionsController(BaseTestCase):
         """
         body = Route()
         response = self.client.open(
-            '/v2/setRoute',
+            '/v2/set_route',
             method='POST',
             data=json.dumps(body),
             content_type='application/json')
@@ -62,9 +76,9 @@ class TestActionsController(BaseTestCase):
 
         Shut down a VNF instance.
         """
-        body = Shutdown()
+        body = VNFID()
         response = self.client.open(
-            '/v2/shutdown',
+            '/v2/shutdown_vnf',
             method='POST',
             data=json.dumps(body),
             content_type='application/json')

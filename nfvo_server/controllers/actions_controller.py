@@ -6,10 +6,10 @@ from threading import Timer
 from nfvo_server.models.body import Body  # noqa: E501
 from nfvo_server.models.route import Route  # noqa: E501
 from nfvo_server.models.route_id import RouteID  # noqa: E501
-from nfvo_server.models.shutdown import Shutdown  # noqa: E501
+from nfvo_server.models.vnfid import VNFID  # noqa: E501
 from nfvo_server import util
 
-from nfvo_server.backend_clients.server import create_server, stop_server
+from nfvo_server.backend_clients.server import create_server, stop_server, destroy_server
 from nfvo_server.backend_clients.sfc import create_sfc, delete_sfc
 
 from nfvo_server.database import db
@@ -39,6 +39,20 @@ def deploy_vnf(body):  # noqa: E501
         body = Body.from_dict(connexion.request.get_json())  # noqa: E501
 
     return create_server(body.vnf_name, body.flavor_id, body.node_name, body.user_data)
+
+def destroy_vnf(body):  # noqa: E501
+    """Destroy a VNF instance.
+
+     # noqa: E501
+
+    :param body: ID of VNF instance to be destroyed.
+    :type body: dict | bytes
+
+    :rtype: None
+    """
+    if connexion.request.is_json:
+        body = VNFID.from_dict(connexion.request.get_json())  # noqa: E501
+    return destroy_server(body.id)
 
 def del_route(route_id):  # noqa: E501
     """Delete a Route.
@@ -86,5 +100,5 @@ def shutdown_vnf(body):  # noqa: E501
     :rtype: None
     """
     if connexion.request.is_json:
-        body = Shutdown.from_dict(connexion.request.get_json())  # noqa: E501
-    return stop_server(body.vnf_instance_id)
+        body = VNFID.from_dict(connexion.request.get_json())  # noqa: E501
+    return stop_server(body.id)
