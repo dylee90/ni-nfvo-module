@@ -33,6 +33,8 @@ paths:
       responses:
         "200":
           description: "Success."
+          schema:
+            type: "string"
         "400":
           description: "Invalid SFC request parameters supplied."
       x-swagger-router-controller: "nfvo_server.controllers.sfcr_controller"
@@ -183,7 +185,7 @@ paths:
     post:
       tags:
       - "actions"
-      summary: "Update a route path."
+      summary: "Update a new route path or new sfcrs."
       description: ""
       operationId: "update_route"
       consumes:
@@ -193,7 +195,7 @@ paths:
       parameters:
       - in: "body"
         name: "body"
-        description: "New route path."
+        description: "Route Update info."
         required: true
         schema:
           $ref: "#/definitions/RouteUpdate"
@@ -232,9 +234,13 @@ definitions:
     properties:
       id:
         type: "string"
+      name:
+        type: "string"
       arrivaltime:
         type: "string"
         format: "date-time"
+      source_client:
+        type: "string"
       src_ip_prefix:
         type: "string"
       dst_ip_prefix:
@@ -270,6 +276,7 @@ definitions:
       \ optional."
     example:
       src_port_max: 6
+      source_client: "source_client"
       dst_ip_prefix: "dst_ip_prefix"
       nf_chain:
       - "nf_chain"
@@ -281,6 +288,7 @@ definitions:
       delay: 2
       bw: 5
       proto: "proto"
+      name: "name"
       arrivaltime: "2000-01-23T04:56:07.000+00:00"
       id: "id"
       dst_port_max: 5
@@ -291,10 +299,10 @@ definitions:
         type: "string"
       sfc_name:
         type: "string"
-      sfcr_id:
-        type: "string"
-      openstack_source_port:
-        type: "string"
+      sfcr_ids:
+        type: "array"
+        items:
+          type: "string"
       vnf_instance_ids:
         type: "array"
         description: "each sub-list represent a node on the traffic path. each node\
@@ -312,13 +320,18 @@ definitions:
         - "vnf_instance_ids"
       sfc_name: "sfc_name"
       id: "id"
-      sfcr_id: "sfcr_id"
-      openstack_source_port: "openstack_source_port"
+      sfcr_ids:
+      - "sfcr_ids"
+      - "sfcr_ids"
   RouteUpdate:
     type: "object"
     properties:
       route_id:
         type: "string"
+      sfcr_ids:
+        type: "array"
+        items:
+          type: "string"
       vnf_instance_ids:
         type: "array"
         description: "each sub-list represent a node on the traffic path. each node\
@@ -335,6 +348,9 @@ definitions:
       - - "vnf_instance_ids"
         - "vnf_instance_ids"
       route_id: "route_id"
+      sfcr_ids:
+      - "sfcr_ids"
+      - "sfcr_ids"
   RouteID:
     type: "object"
     properties:

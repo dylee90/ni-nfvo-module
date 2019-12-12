@@ -15,25 +15,30 @@ class RouteUpdate(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, route_id: str=None, vnf_instance_ids: List[List[str]]=None):  # noqa: E501
+    def __init__(self, route_id: str=None, sfcr_ids: List[str]=None, vnf_instance_ids: List[List[str]]=None):  # noqa: E501
         """RouteUpdate - a model defined in Swagger
 
         :param route_id: The route_id of this RouteUpdate.  # noqa: E501
         :type route_id: str
+        :param sfcr_ids: The sfcr_ids of this RouteUpdate.  # noqa: E501
+        :type sfcr_ids: List[str]
         :param vnf_instance_ids: The vnf_instance_ids of this RouteUpdate.  # noqa: E501
         :type vnf_instance_ids: List[List[str]]
         """
         self.swagger_types = {
             'route_id': str,
+            'sfcr_ids': List[str],
             'vnf_instance_ids': List[List[str]]
         }
 
         self.attribute_map = {
             'route_id': 'route_id',
+            'sfcr_ids': 'sfcr_ids',
             'vnf_instance_ids': 'vnf_instance_ids'
         }
 
         self._route_id = route_id
+        self._sfcr_ids = sfcr_ids
         self._vnf_instance_ids = vnf_instance_ids
 
     @classmethod
@@ -67,6 +72,27 @@ class RouteUpdate(Model):
         """
 
         self._route_id = route_id
+
+    @property
+    def sfcr_ids(self) -> List[str]:
+        """Gets the sfcr_ids of this RouteUpdate.
+
+
+        :return: The sfcr_ids of this RouteUpdate.
+        :rtype: List[str]
+        """
+        return self._sfcr_ids
+
+    @sfcr_ids.setter
+    def sfcr_ids(self, sfcr_ids: List[str]):
+        """Sets the sfcr_ids of this RouteUpdate.
+
+
+        :param sfcr_ids: The sfcr_ids of this RouteUpdate.
+        :type sfcr_ids: List[str]
+        """
+
+        self._sfcr_ids = sfcr_ids
 
     @property
     def vnf_instance_ids(self) -> List[List[str]]:

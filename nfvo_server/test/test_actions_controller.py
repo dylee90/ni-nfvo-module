@@ -89,7 +89,7 @@ class TestActionsController(BaseTestCase):
     def test_update_route(self):
         """Test case for update_route
 
-        Update a route path.
+        Update a new route path or new sfcrs.
         """
         body = RouteUpdate()
         response = self.client.open(

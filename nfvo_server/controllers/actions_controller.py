@@ -97,7 +97,7 @@ def set_route(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = Route.from_dict(connexion.request.get_json())  # noqa: E501
-    route_id = create_sfc(body.sfc_name, body.sfcr_id, body.openstack_source_port, body.vnf_instance_ids)
+    route_id = create_sfc(body.sfc_name, body.sfcr_ids, body.vnf_instance_ids)
     body.id = route_id
     db.insert_route(body)
 
@@ -115,4 +115,4 @@ def update_route(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = RouteUpdate.from_dict(connexion.request.get_json())  # noqa: E501
-    return update_sfc(body.route_id, body.vnf_instance_ids)
+    return update_sfc(body.route_id, body.sfcr_ids, body.vnf_instance_ids)

@@ -15,13 +15,17 @@ class SFCR(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, id: str=None, arrivaltime: datetime=None, src_ip_prefix: str=None, dst_ip_prefix: str=None, src_port_min: int=None, src_port_max: int=None, dst_port_min: int=None, dst_port_max: int=None, bw: int=None, delay: int=None, duration: int=None, proto: str=None, nf_chain: List[str]=None):  # noqa: E501
+    def __init__(self, id: str=None, name: str=None, arrivaltime: datetime=None, source_client: str=None, src_ip_prefix: str=None, dst_ip_prefix: str=None, src_port_min: int=None, src_port_max: int=None, dst_port_min: int=None, dst_port_max: int=None, bw: int=None, delay: int=None, duration: int=None, proto: str=None, nf_chain: List[str]=None):  # noqa: E501
         """SFCR - a model defined in Swagger
 
         :param id: The id of this SFCR.  # noqa: E501
         :type id: str
+        :param name: The name of this SFCR.  # noqa: E501
+        :type name: str
         :param arrivaltime: The arrivaltime of this SFCR.  # noqa: E501
         :type arrivaltime: datetime
+        :param source_client: The source_client of this SFCR.  # noqa: E501
+        :type source_client: str
         :param src_ip_prefix: The src_ip_prefix of this SFCR.  # noqa: E501
         :type src_ip_prefix: str
         :param dst_ip_prefix: The dst_ip_prefix of this SFCR.  # noqa: E501
@@ -47,7 +51,9 @@ class SFCR(Model):
         """
         self.swagger_types = {
             'id': str,
+            'name': str,
             'arrivaltime': datetime,
+            'source_client': str,
             'src_ip_prefix': str,
             'dst_ip_prefix': str,
             'src_port_min': int,
@@ -63,7 +69,9 @@ class SFCR(Model):
 
         self.attribute_map = {
             'id': 'id',
+            'name': 'name',
             'arrivaltime': 'arrivaltime',
+            'source_client': 'source_client',
             'src_ip_prefix': 'src_ip_prefix',
             'dst_ip_prefix': 'dst_ip_prefix',
             'src_port_min': 'src_port_min',
@@ -78,7 +86,9 @@ class SFCR(Model):
         }
 
         self._id = id
+        self._name = name
         self._arrivaltime = arrivaltime
+        self._source_client = source_client
         self._src_ip_prefix = src_ip_prefix
         self._dst_ip_prefix = dst_ip_prefix
         self._src_port_min = src_port_min
@@ -124,6 +134,27 @@ class SFCR(Model):
         self._id = id
 
     @property
+    def name(self) -> str:
+        """Gets the name of this SFCR.
+
+
+        :return: The name of this SFCR.
+        :rtype: str
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name: str):
+        """Sets the name of this SFCR.
+
+
+        :param name: The name of this SFCR.
+        :type name: str
+        """
+
+        self._name = name
+
+    @property
     def arrivaltime(self) -> datetime:
         """Gets the arrivaltime of this SFCR.
 
@@ -143,6 +174,27 @@ class SFCR(Model):
         """
 
         self._arrivaltime = arrivaltime
+
+    @property
+    def source_client(self) -> str:
+        """Gets the source_client of this SFCR.
+
+
+        :return: The source_client of this SFCR.
+        :rtype: str
+        """
+        return self._source_client
+
+    @source_client.setter
+    def source_client(self, source_client: str):
+        """Sets the source_client of this SFCR.
+
+
+        :param source_client: The source_client of this SFCR.
+        :type source_client: str
+        """
+
+        self._source_client = source_client
 
     @property
     def src_ip_prefix(self) -> str:

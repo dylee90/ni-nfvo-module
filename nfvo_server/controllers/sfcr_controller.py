@@ -8,6 +8,8 @@ from nfvo_server.models.sfcr import SFCR  # noqa: E501
 from nfvo_server.database import db
 from nfvo_server import util
 
+from nfvo_server.backend_clients.sfc import create_flow_classifier
+
 import ai_module_client as swagc_ai
 
 
@@ -37,7 +39,7 @@ def add_sfcr(body):  # noqa: E501
     :param body: SFC request object to be added.
     :type body: dict | bytes
 
-    :rtype: None
+    :rtype: str
     """
     if connexion.request.is_json:
         global time_of_last_arrival
@@ -48,5 +50,8 @@ def add_sfcr(body):  # noqa: E501
         print("[ sfcr_controller ] Notifying AI module of arrival.\n")
         notify_ai_module()
 
-        body.id = str(uuid.uuid4())
+        flow_classifier_id = create_flow_classifier(body)
+        body.id = flow_classifier_id
         db.insert_active_request(body)
+
+        return flow_classifier_id

@@ -15,40 +15,35 @@ class Route(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, id: str=None, sfc_name: str=None, sfcr_id: str=None, openstack_source_port: str=None, vnf_instance_ids: List[List[str]]=None):  # noqa: E501
+    def __init__(self, id: str=None, sfc_name: str=None, sfcr_ids: List[str]=None, vnf_instance_ids: List[List[str]]=None):  # noqa: E501
         """Route - a model defined in Swagger
 
         :param id: The id of this Route.  # noqa: E501
         :type id: str
         :param sfc_name: The sfc_name of this Route.  # noqa: E501
         :type sfc_name: str
-        :param sfcr_id: The sfcr_id of this Route.  # noqa: E501
-        :type sfcr_id: str
-        :param openstack_source_port: The openstack_source_port of this Route.  # noqa: E501
-        :type openstack_source_port: str
+        :param sfcr_ids: The sfcr_ids of this Route.  # noqa: E501
+        :type sfcr_ids: List[str]
         :param vnf_instance_ids: The vnf_instance_ids of this Route.  # noqa: E501
         :type vnf_instance_ids: List[List[str]]
         """
         self.swagger_types = {
             'id': str,
             'sfc_name': str,
-            'sfcr_id': str,
-            'openstack_source_port': str,
+            'sfcr_ids': List[str],
             'vnf_instance_ids': List[List[str]]
         }
 
         self.attribute_map = {
             'id': 'id',
             'sfc_name': 'sfc_name',
-            'sfcr_id': 'sfcr_id',
-            'openstack_source_port': 'openstack_source_port',
+            'sfcr_ids': 'sfcr_ids',
             'vnf_instance_ids': 'vnf_instance_ids'
         }
 
         self._id = id
         self._sfc_name = sfc_name
-        self._sfcr_id = sfcr_id
-        self._openstack_source_port = openstack_source_port
+        self._sfcr_ids = sfcr_ids
         self._vnf_instance_ids = vnf_instance_ids
 
     @classmethod
@@ -105,46 +100,25 @@ class Route(Model):
         self._sfc_name = sfc_name
 
     @property
-    def sfcr_id(self) -> str:
-        """Gets the sfcr_id of this Route.
+    def sfcr_ids(self) -> List[str]:
+        """Gets the sfcr_ids of this Route.
 
 
-        :return: The sfcr_id of this Route.
-        :rtype: str
+        :return: The sfcr_ids of this Route.
+        :rtype: List[str]
         """
-        return self._sfcr_id
+        return self._sfcr_ids
 
-    @sfcr_id.setter
-    def sfcr_id(self, sfcr_id: str):
-        """Sets the sfcr_id of this Route.
-
-
-        :param sfcr_id: The sfcr_id of this Route.
-        :type sfcr_id: str
-        """
-
-        self._sfcr_id = sfcr_id
-
-    @property
-    def openstack_source_port(self) -> str:
-        """Gets the openstack_source_port of this Route.
+    @sfcr_ids.setter
+    def sfcr_ids(self, sfcr_ids: List[str]):
+        """Sets the sfcr_ids of this Route.
 
 
-        :return: The openstack_source_port of this Route.
-        :rtype: str
-        """
-        return self._openstack_source_port
-
-    @openstack_source_port.setter
-    def openstack_source_port(self, openstack_source_port: str):
-        """Sets the openstack_source_port of this Route.
-
-
-        :param openstack_source_port: The openstack_source_port of this Route.
-        :type openstack_source_port: str
+        :param sfcr_ids: The sfcr_ids of this Route.
+        :type sfcr_ids: List[str]
         """
 
-        self._openstack_source_port = openstack_source_port
+        self._sfcr_ids = sfcr_ids
 
     @property
     def vnf_instance_ids(self) -> List[List[str]]:

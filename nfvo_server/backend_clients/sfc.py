@@ -13,18 +13,12 @@ vnf_cfg = cfg["openstack_client"]["vnf"]
 base_url = client.base_urls["network"]
 
 
-def create_sfc(fc_prefix, sfcr_id, logical_source_port, vnf_ids_list):
+def create_sfc(fc_prefix, sfcr_ids, vnf_ids_list):
     client.rset_auth_info()
     headers = {'X-Auth-Token': client.client.auth_token}
 
     if len(vnf_ids_list) == 0:
         error_message = "vnf list is empty"
-        current_app.logger.error(error_message)
-        abort(404, error_message)
-
-    sfcr = db.get_active_request(sfcr_id)
-    if sfcr is None:
-        error_message = "no sfcr for the provided sfcr_id"
         current_app.logger.error(error_message)
         abort(404, error_message)
 
@@ -38,10 +32,9 @@ def create_sfc(fc_prefix, sfcr_id, logical_source_port, vnf_ids_list):
     else:
         postfix_name = "{}".format(str(uuid.uuid4()))
 
-    flow_classifier_id = _create_flow_classifier(postfix_name, sfcr, logical_source_port)
     port_pairs_ids_list = _create_port_pairs(postfix_name, port_ids_list)
     pp_group_ids = _create_port_pair_groups(postfix_name, port_pairs_ids_list)
-    p_chain_id = _create_port_chain(postfix_name, pp_group_ids, flow_classifier_id)
+    p_chain_id = _create_port_chain(postfix_name, pp_group_ids, sfcr_ids)
 
     return p_chain_id
 
@@ -59,12 +52,13 @@ def _get_data_port(vnf_instance_id):
     current_app.logger.error(error_message)
     abort(req.status_code, error_message)
 
-def _create_flow_classifier(postfix_name, sfcr, logical_source_port):
+def create_flow_classifier(sfcr):
     url = "/v2.0/sfc/flow_classifiers"
+    flow_classifier_ids = []
+
     body = dict()
     # logical_source_port is required
-    body["logical_source_port"] = logical_source_port
-    body["name"] = "fc_{}".format(postfix_name)
+    body["logical_source_port"] = _get_data_port(sfcr.source_client)
 
     if sfcr.src_ip_prefix is not None:
         body["source_ip_prefix"] = sfcr.src_ip_prefix
@@ -92,6 +86,7 @@ def _create_flow_classifier(postfix_name, sfcr, logical_source_port):
     else:
         current_app.logger.error(req.text)
         abort(req.status_code, req.text)
+
 
 def _create_port_pairs(postfix_name, port_ids_list, allow_existing_pp=False):
     # create port_pairs from ports. Use the same port for ingress and egress
@@ -183,28 +178,64 @@ def _create_port_chain(postfix_name, port_pair_groups, flow_classifiers):
         abort(req.status_code, req.text)
 
 
-def update_sfc(route_id, vnf_ids_list):
+def update_sfc(route_id, sfcr_ids=None, vnf_ids_list=None):
     route = db.get_route(route_id)
-    postfix_name = route.sfc_name
+    if route is None:
+        error_message = "route_id: {} not found".format(route_id)
+        current_app.logger.error(error_message)
+        abort(404, error_message)
 
-    old_port_pairs = _get_all_port_pairs_of_route(route_id)
+    if sfcr_ids:
+        _update_sfc_flow_classifiers(route, sfcr_ids, update_db=False)
+        route.sfcr_ids = sfcr_ids
+
+    if vnf_ids_list:
+        _update_sfc_vnf_ids(route, vnf_ids_list, update_db=False)
+        route.vnf_instance_ids = vnf_ids_list
+
+    if sfcr_ids or vnf_ids_list:
+        db.update_route(route)
+
+def _update_sfc_flow_classifiers(route, sfcr_ids, update_db=True):
+    body = {
+                "port_chain": {
+                    "flow_classifiers": sfcr_ids,
+                }
+            }
+
+    req = requests.put("{}{}{}".format(base_url, "/v2.0/sfc/port_chains/", route.id),
+        json=body,
+        headers={'X-Auth-Token': client.client.auth_token})
+
+    if req.status_code != 200:
+        current_app.logger.error(req.text)
+        abort(req.status_code, req.text)
+
+    if update_db:
+        route.sfcr_ids = sfcr_ids
+        db.update_route(route)
+
+def _update_sfc_vnf_ids(route, vnf_ids_list,  update_db=True):
+    old_port_pairs = _get_all_port_pairs_of_route(route.id)
 
     port_ids_list = []
     for vnf_ids in vnf_ids_list:
         port_ids = [_get_data_port(vnf_id) for vnf_id in vnf_ids]
         port_ids_list.append(port_ids)
 
-    new_port_pairs_list = _create_port_pairs(postfix_name, port_ids_list, allow_existing_pp=True)
-    _update_port_pair_groups(route_id, new_port_pairs_list)
+    new_port_pairs_list = _create_port_pairs(route.sfc_name, port_ids_list, allow_existing_pp=True)
+    _update_port_pair_groups(route.id, new_port_pairs_list)
 
-    route.vnf_instance_ids = vnf_ids_list
-    db.update_route(route)
+    if update_db:
+        route.vnf_instance_ids = vnf_ids_list
+        db.update_route(route)
 
     new_port_pairs = [pp for row in new_port_pairs_list for pp in row]
 
     for port_pair in old_port_pairs:
         if port_pair not in new_port_pairs:
             _delete_port_pair(port_pair)
+
 
 def _get_all_port_pairs_of_route(route_id):
     port_pairs = []
@@ -268,15 +299,15 @@ def _delete_port_chain_recursive(port_chain_id):
         abort(req.status_code, req.text)
     req = req.json()
     port_pair_groups = req["port_chain"]["port_pair_groups"]
-    flow_classifiers = req["port_chain"]["flow_classifiers"]
+    # flow_classifiers = req["port_chain"]["flow_classifiers"]
 
     _delete_port_chain(port_chain_id)
 
     for port_pair_group in port_pair_groups:
         _delete_port_pair_group_recursive(port_pair_group)
 
-    for flow_classifier in flow_classifiers:
-        _delete_flow_classifier(flow_classifier)
+    # for flow_classifier in flow_classifiers:
+    #     _delete_flow_classifier(flow_classifier)
 
 def _delete_port_chain(port_chain_id):
     url = "/v2.0/sfc/port_chains"
