@@ -6,6 +6,9 @@ import base64
 from nfvo_server.config import cfg
 from nfvo_server.backend_clients.utils import openstack_client as client
 
+from flask import abort
+from flask import current_app
+
 vnf_cfg = cfg["openstack_client"]["vnf"]
 
 
@@ -20,6 +23,7 @@ def create_server(server_prefix, flavor_id, host_name, custom_user_data):
     req = requests.get("{}{}".format(base_url, url),
         headers=headers)
     if req.status_code != 200:
+        current_app.logger.error(req.text)
         abort(req.status_code, req.text)
 
     extra_specs = req.json()
@@ -63,6 +67,7 @@ def create_server(server_prefix, flavor_id, host_name, custom_user_data):
     if req.status_code == 202:
         return req.json()["server"]["id"], 200
     else:
+        current_app.logger.error(req.text)
         abort(req.status_code, req.text)
 
 def stop_server(server_id):
@@ -81,6 +86,7 @@ def stop_server(server_id):
         headers=headers)
 
     if req.status_code != 202:
+        current_app.logger.error(req.text)
         abort(req.status_code, req.text)
 
 def destroy_server(server_id):
@@ -94,4 +100,5 @@ def destroy_server(server_id):
         headers=headers)
 
     if req.status_code != 204:
+        current_app.logger.error(req.text)
         abort(req.status_code, req.text)

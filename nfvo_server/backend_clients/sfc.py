@@ -18,11 +18,15 @@ def create_sfc(fc_prefix, sfcr_id, logical_source_port, vnf_ids_list):
     headers = {'X-Auth-Token': client.client.auth_token}
 
     if len(vnf_ids_list) == 0:
-        abort(req.status_code, "vnf list is empty")
+        error_message = "vnf list is empty"
+        current_app.logger.error(error_message)
+        abort(404, error_message)
 
     sfcr = db.get_active_request(sfcr_id)
     if sfcr is None:
-        abort(req.status_code, "no sfcr for the provided sfcr_id")
+        error_message = "no sfcr for the provided sfcr_id"
+        current_app.logger.error(error_message)
+        abort(404, error_message)
 
     port_ids_list = []
     for vnf_ids in vnf_ids_list:
@@ -51,7 +55,9 @@ def _get_data_port(vnf_instance_id):
         if port["network_id"] == vnf_cfg["data_net_id"]:
             return port["id"]
 
-    abort(req.status_code, "no data port for vnf id: {}".format(vnf_instance_id))
+    error_message = "no data port for vnf id: {}".format(vnf_instance_id)
+    current_app.logger.error(error_message)
+    abort(req.status_code, error_message)
 
 def _create_flow_classifier(postfix_name, sfcr, logical_source_port):
     url = "/v2.0/sfc/flow_classifiers"
