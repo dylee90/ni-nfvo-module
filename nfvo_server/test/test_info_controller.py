@@ -13,18 +13,6 @@ from nfvo_server.test import BaseTestCase
 class TestInfoController(BaseTestCase):
     """InfoController integration test stubs"""
 
-    def test_get_requests(self):
-        """Test case for get_requests
-
-        Get currently active SFC requests.
-        """
-        response = self.client.open(
-            '/v2/requests',
-            method='GET',
-            content_type='application/json')
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
-
     def test_get_routes(self):
         """Test case for get_routes
 
@@ -32,6 +20,18 @@ class TestInfoController(BaseTestCase):
         """
         response = self.client.open(
             '/v2/routes',
+            method='GET',
+            content_type='application/json')
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+    def test_get_sfcrs(self):
+        """Test case for get_sfcrs
+
+        Get currently active SFC requests.
+        """
+        response = self.client.open(
+            '/v2/sfcrs',
             method='GET',
             content_type='application/json')
         self.assert200(response,

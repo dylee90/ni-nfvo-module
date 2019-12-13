@@ -5,9 +5,7 @@ from threading import Timer
 
 from nfvo_server.models.body import Body  # noqa: E501
 from nfvo_server.models.route import Route  # noqa: E501
-from nfvo_server.models.route_id import RouteID  # noqa: E501
 from nfvo_server.models.route_update import RouteUpdate  # noqa: E501
-from nfvo_server.models.vnfid import VNFID  # noqa: E501
 from nfvo_server import util
 
 from nfvo_server.backend_clients.server import create_server, stop_server, destroy_server
@@ -55,34 +53,32 @@ def shutdown_vnf(body):  # noqa: E501
         body = VNFID.from_dict(connexion.request.get_json())  # noqa: E501
     return stop_server(body.id)
 
-def destroy_vnf(body):  # noqa: E501
+def destroy_vnf(id):  # noqa: E501
     """Destroy a VNF instance.
 
      # noqa: E501
 
-    :param body: ID of VNF instance to be destroyed.
-    :type body: dict | bytes
+    :param id: vnf id
+    :type id: str
 
     :rtype: None
     """
-    if connexion.request.is_json:
-        body = VNFID.from_dict(connexion.request.get_json())  # noqa: E501
-    return destroy_server(body.id)
 
-def del_route(route_id):  # noqa: E501
+    return destroy_server(id)
+
+def del_route(id):  # noqa: E501
     """Delete a Route.
 
      # noqa: E501
 
-    :param route_id:
-    :type route_id: dict | bytes
+    :param id: route id
+    :type id: str
 
     :rtype: None
     """
-    if connexion.request.is_json:
-        route_id = RouteID.from_dict(connexion.request.get_json())  # noqa: E501
-    delete_sfc(route_id.id)
-    db.del_route(route_id.id)
+
+    delete_sfc(id)
+    db.del_route(id)
 
 
 def set_route(body):  # noqa: E501
@@ -103,16 +99,18 @@ def set_route(body):  # noqa: E501
 
     return route_id
 
-def update_route(body):  # noqa: E501
+def update_route(id, body):  # noqa: E501
     """Update a route path.
 
      # noqa: E501
 
-    :param body: New route path.
+    :param id: route id
+    :type id: str
+    :param body: Route Update info.
     :type body: dict | bytes
 
     :rtype: str
     """
     if connexion.request.is_json:
         body = RouteUpdate.from_dict(connexion.request.get_json())  # noqa: E501
-    return update_sfc(body.route_id, body.sfcr_ids, body.vnf_instance_ids)
+    return update_sfc(id, body.sfcr_ids, body.vnf_instance_ids)

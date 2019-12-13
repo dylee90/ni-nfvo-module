@@ -26,7 +26,7 @@ serialization.register_serializer(DateTimeSerializer(), 'TinyDate')
 
 db = TinyDB('nfvo_server/database/db.json', storage=serialization)
 routes = db.table('routes', cache_size=30)
-active_requests = db.table('active_requests', cache_size=30)
+sfcrs = db.table('sfcrs', cache_size=30)
 query = Query()
 
 def insert_route(route):
@@ -35,26 +35,26 @@ def insert_route(route):
 def update_route(route):
     routes.upsert(route.to_dict(), query.id == route.id)
 
-def update_active_request(active_request):
-    active_requests.upsert(active_request.to_dict(), query.id == active_request.id)
+def update_sfcr(sfcr):
+    sfcrs.upsert(sfcr.to_dict(), query.id == sfcr.id)
 
-def insert_active_request(active_request):
-    active_requests.insert(active_request.to_dict())
+def insert_sfcr(sfcr):
+    sfcrs.insert(sfcr.to_dict())
 
 def get_route(id):
     return Route.from_dict(routes.get(query.id == id))
 
-def get_active_request(id):
-    return SFCR.from_dict(active_requests.get(query.id == id))
+def get_sfcr(id):
+    return SFCR.from_dict(sfcrs.get(query.id == id))
 
 def get_all_routes():
     return [Route.from_dict(route) for route in routes.all()]
 
-def get_all_active_requests():
-    return [SFCR.from_dict(sfcr) for sfcr in active_requests.all()]
+def get_all_sfcrs():
+    return [SFCR.from_dict(sfcr) for sfcr in sfcrs.all()]
 
 def del_route(id):
     routes.remove(query.id == id)
 
-def del_active_request(id):
-    active_requests.remove(query.id == id)
+def del_sfcr(id):
+    sfcrs.remove(query.id == id)

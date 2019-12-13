@@ -307,7 +307,7 @@ def _delete_port_chain_recursive(port_chain_id):
         _delete_port_pair_group_recursive(port_pair_group)
 
     # for flow_classifier in flow_classifiers:
-    #     _delete_flow_classifier(flow_classifier)
+    #     delete_flow_classifier(flow_classifier)
 
 def _delete_port_chain(port_chain_id):
     url = "/v2.0/sfc/port_chains"
@@ -348,7 +348,7 @@ def _delete_port_pair_group(port_pair_group_id):
         current_app.logger.error(req.text)
         abort(req.status_code, req.text)
 
-def _delete_flow_classifier(flow_classifier_id):
+def delete_flow_classifier(flow_classifier_id):
     url = "/v2.0/sfc/flow_classifiers"
     req = requests.delete("{}{}/{}".format(base_url, url, flow_classifier_id),
         headers={'X-Auth-Token': client.client.auth_token})

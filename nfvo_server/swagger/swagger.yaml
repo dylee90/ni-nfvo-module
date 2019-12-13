@@ -12,7 +12,26 @@ tags:
 schemes:
 - "http"
 paths:
-  /sfcr:
+  /sfcrs:
+    get:
+      tags:
+      - "info"
+      summary: "Get currently active SFC requests."
+      description: ""
+      operationId: "get_sfcrs"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "Success."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/SFCR"
+      x-swagger-router-controller: "nfvo_server.controllers.info_controller"
     post:
       tags:
       - "sfcr"
@@ -38,6 +57,27 @@ paths:
         "400":
           description: "Invalid SFC request parameters supplied."
       x-swagger-router-controller: "nfvo_server.controllers.sfcr_controller"
+  /sfcrs/{id}:
+    delete:
+      tags:
+      - "sfcr"
+      summary: "Delete a sfcr."
+      description: ""
+      operationId: "del_sfcr"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "route id"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Success."
+      x-swagger-router-controller: "nfvo_server.controllers.sfcr_controller"
   /routes:
     get:
       tags:
@@ -59,102 +99,6 @@ paths:
             items:
               $ref: "#/definitions/Route"
       x-swagger-router-controller: "nfvo_server.controllers.info_controller"
-  /requests:
-    get:
-      tags:
-      - "info"
-      summary: "Get currently active SFC requests."
-      description: ""
-      operationId: "get_requests"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        "200":
-          description: "Success."
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/SFCR"
-      x-swagger-router-controller: "nfvo_server.controllers.info_controller"
-  /deploy_vnf:
-    post:
-      tags:
-      - "actions"
-      summary: "Instantiate an instance of a VNF flavor on a given node."
-      description: ""
-      operationId: "deploy_vnf"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Flavor of VNF instance to be deployed as well as the target\
-          \ node. vnf_name is optional"
-        required: true
-        schema:
-          $ref: "#/definitions/body"
-      responses:
-        "200":
-          description: "Success."
-          schema:
-            type: "string"
-        "400":
-          description: "Invalid parameters supplied."
-      x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
-  /shutdown_vnf:
-    post:
-      tags:
-      - "actions"
-      summary: "Shut down a VNF instance."
-      description: ""
-      operationId: "shutdown_vnf"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "ID of VNF instance to be shut down."
-        required: true
-        schema:
-          $ref: "#/definitions/VNFID"
-      responses:
-        "200":
-          description: "Success."
-        "400":
-          description: "Invalid parameters supplied."
-      x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
-  /destroy_vnf:
-    post:
-      tags:
-      - "actions"
-      summary: "Destroy a VNF instance."
-      description: ""
-      operationId: "destroy_vnf"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "ID of VNF instance to be destroyed."
-        required: true
-        schema:
-          $ref: "#/definitions/VNFID"
-      responses:
-        "200":
-          description: "Success."
-        "400":
-          description: "Invalid parameters supplied."
-      x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
-  /set_route:
     post:
       tags:
       - "actions"
@@ -181,8 +125,8 @@ paths:
         "400":
           description: "Invalid parameters supplied."
       x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
-  /update_route:
-    post:
+  /routes/{id}:
+    put:
       tags:
       - "actions"
       summary: "Update a new route path or new sfcrs."
@@ -193,6 +137,11 @@ paths:
       produces:
       - "application/json"
       parameters:
+      - name: "id"
+        in: "path"
+        description: "route id"
+        required: true
+        type: "string"
       - in: "body"
         name: "body"
         description: "Route Update info."
@@ -207,8 +156,7 @@ paths:
         "400":
           description: "Invalid parameters supplied."
       x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
-  /del_route:
-    post:
+    delete:
       tags:
       - "actions"
       summary: "Delete a Route."
@@ -219,14 +167,87 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - in: "body"
-        name: "route_id"
+      - name: "id"
+        in: "path"
+        description: "route id"
         required: true
-        schema:
-          $ref: "#/definitions/RouteID"
+        type: "string"
       responses:
         "200":
           description: "Success."
+      x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
+  /vnfs:
+    post:
+      tags:
+      - "actions"
+      summary: "Instantiate an instance of a VNF flavor on a given node."
+      description: ""
+      operationId: "deploy_vnf"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Flavor of VNF instance to be deployed as well as the target\
+          \ node. vnf_name is optional"
+        required: true
+        schema:
+          $ref: "#/definitions/body"
+      responses:
+        "200":
+          description: "Success."
+          schema:
+            type: "string"
+        "400":
+          description: "Invalid parameters supplied."
+      x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
+  /vnfs/{id}:
+    delete:
+      tags:
+      - "actions"
+      summary: "Destroy a VNF instance."
+      description: ""
+      operationId: "destroy_vnf"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "vnf id"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Success."
+        "400":
+          description: "Invalid parameters supplied."
+      x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
+  /vnfs/{id}/shutdown:
+    post:
+      tags:
+      - "actions"
+      summary: "Shut down a VNF instance."
+      description: ""
+      operationId: "shutdown_vnf"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of VNF instance to be shut down."
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Success."
+        "400":
+          description: "Invalid parameters supplied."
       x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
 definitions:
   SFCR:
@@ -326,8 +347,6 @@ definitions:
   RouteUpdate:
     type: "object"
     properties:
-      route_id:
-        type: "string"
       sfcr_ids:
         type: "array"
         items:
@@ -347,26 +366,9 @@ definitions:
         - "vnf_instance_ids"
       - - "vnf_instance_ids"
         - "vnf_instance_ids"
-      route_id: "route_id"
       sfcr_ids:
       - "sfcr_ids"
       - "sfcr_ids"
-  RouteID:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-    description: "route id."
-    example:
-      id: "id"
-  VNFID:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-    description: "VNF id."
-    example:
-      id: "id"
   body:
     type: "object"
     properties:

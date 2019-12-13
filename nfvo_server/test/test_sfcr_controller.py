@@ -19,9 +19,21 @@ class TestSfcrController(BaseTestCase):
         """
         body = SFCR()
         response = self.client.open(
-            '/v2/sfcr',
+            '/v2/sfcrs',
             method='POST',
             data=json.dumps(body),
+            content_type='application/json')
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+    def test_del_sfcr(self):
+        """Test case for del_sfcr
+
+        Delete a sfcr.
+        """
+        response = self.client.open(
+            '/v2/sfcrs/{id}'.format(id='id_example'),
+            method='DELETE',
             content_type='application/json')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))

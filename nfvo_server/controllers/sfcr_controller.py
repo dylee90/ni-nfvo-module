@@ -8,7 +8,7 @@ from nfvo_server.models.sfcr import SFCR  # noqa: E501
 from nfvo_server.database import db
 from nfvo_server import util
 
-from nfvo_server.backend_clients.sfc import create_flow_classifier
+from nfvo_server.backend_clients.sfc import create_flow_classifier, delete_flow_classifier
 
 import ai_module_client as swagc_ai
 
@@ -52,6 +52,20 @@ def add_sfcr(body):  # noqa: E501
 
         flow_classifier_id = create_flow_classifier(body)
         body.id = flow_classifier_id
-        db.insert_active_request(body)
+        db.insert_sfcr(body)
 
         return flow_classifier_id
+
+def del_sfcr(id):  # noqa: E501
+    """Delete a sfcr.
+
+     # noqa: E501
+
+    :param id: route id
+    :type id: str
+
+    :rtype: None
+    """
+    delete_flow_classifier(id)
+    db.del_sfcr(id)
+

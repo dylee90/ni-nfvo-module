@@ -6,7 +6,7 @@ from nfvo_server.models.sfcr import SFCR  # noqa: E501
 from nfvo_server.database import db
 from nfvo_server import util
 
-def get_requests():  # noqa: E501
+def get_sfcrs():  # noqa: E501
     """Get currently active SFC requests.
 
      # noqa: E501
@@ -14,7 +14,7 @@ def get_requests():  # noqa: E501
 
     :rtype: List[SFCR]
     """
-    return db.get_all_active_requests()
+    return db.get_all_sfcrs()
 
 
 def get_routes():  # noqa: E501

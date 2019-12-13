@@ -7,9 +7,7 @@ from six import BytesIO
 
 from nfvo_server.models.body import Body  # noqa: E501
 from nfvo_server.models.route import Route  # noqa: E501
-from nfvo_server.models.route_id import RouteID  # noqa: E501
 from nfvo_server.models.route_update import RouteUpdate  # noqa: E501
-from nfvo_server.models.vnfid import VNFID  # noqa: E501
 from nfvo_server.test import BaseTestCase
 
 
@@ -21,11 +19,9 @@ class TestActionsController(BaseTestCase):
 
         Delete a Route.
         """
-        route_id = RouteID()
         response = self.client.open(
-            '/v2/del_route',
-            method='POST',
-            data=json.dumps(route_id),
+            '/v2/routes/{id}'.format(id='id_example'),
+            method='DELETE',
             content_type='application/json')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -37,7 +33,7 @@ class TestActionsController(BaseTestCase):
         """
         body = Body()
         response = self.client.open(
-            '/v2/deploy_vnf',
+            '/v2/vnfs',
             method='POST',
             data=json.dumps(body),
             content_type='application/json')
@@ -49,11 +45,9 @@ class TestActionsController(BaseTestCase):
 
         Destroy a VNF instance.
         """
-        body = VNFID()
         response = self.client.open(
-            '/v2/destroy_vnf',
-            method='POST',
-            data=json.dumps(body),
+            '/v2/vnfs/{id}'.format(id='id_example'),
+            method='DELETE',
             content_type='application/json')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -65,7 +59,7 @@ class TestActionsController(BaseTestCase):
         """
         body = Route()
         response = self.client.open(
-            '/v2/set_route',
+            '/v2/routes',
             method='POST',
             data=json.dumps(body),
             content_type='application/json')
@@ -77,11 +71,9 @@ class TestActionsController(BaseTestCase):
 
         Shut down a VNF instance.
         """
-        body = VNFID()
         response = self.client.open(
-            '/v2/shutdown_vnf',
+            '/v2/vnfs/{id}/shutdown'.format(id='id_example'),
             method='POST',
-            data=json.dumps(body),
             content_type='application/json')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -93,8 +85,8 @@ class TestActionsController(BaseTestCase):
         """
         body = RouteUpdate()
         response = self.client.open(
-            '/v2/update_route',
-            method='POST',
+            '/v2/routes/{id}'.format(id='id_example'),
+            method='PUT',
             data=json.dumps(body),
             content_type='application/json')
         self.assert200(response,
