@@ -5,47 +5,47 @@ from __future__ import absolute_import
 from flask import json
 from six import BytesIO
 
-from nfvo_server.models.sfcr import SFCR  # noqa: E501
+from nfvo_server.models.body import Body  # noqa: E501
 from nfvo_server.test import BaseTestCase
 
 
-class TestSfcrController(BaseTestCase):
-    """SfcrController integration test stubs"""
+class TestVnfController(BaseTestCase):
+    """VnfController integration test stubs"""
 
-    def test_add_sfcr(self):
-        """Test case for add_sfcr
+    def test_deploy_vnf(self):
+        """Test case for deploy_vnf
 
-        Add new SFC request. id field is optional
+        Instantiate an instance of a VNF flavor on a given node.
         """
-        body = SFCR()
+        body = Body()
         response = self.client.open(
-            '/v2/sfcrs',
+            '/v2/vnfs',
             method='POST',
             data=json.dumps(body),
             content_type='application/json')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
-    def test_del_sfcr(self):
-        """Test case for del_sfcr
+    def test_destroy_vnf(self):
+        """Test case for destroy_vnf
 
-        Delete a sfcr.
+        Destroy a VNF instance.
         """
         response = self.client.open(
-            '/v2/sfcrs/{id}'.format(id='id_example'),
+            '/v2/vnfs/{id}'.format(id='id_example'),
             method='DELETE',
             content_type='application/json')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
-    def test_get_sfcrs(self):
-        """Test case for get_sfcrs
+    def test_shutdown_vnf(self):
+        """Test case for shutdown_vnf
 
-        Get currently active SFC requests.
+        Shut down a VNF instance.
         """
         response = self.client.open(
-            '/v2/sfcrs',
-            method='GET',
+            '/v2/vnfs/{id}/shutdown'.format(id='id_example'),
+            method='POST',
             content_type='application/json')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))

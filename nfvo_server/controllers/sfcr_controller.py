@@ -12,7 +12,6 @@ from nfvo_server.backend_clients.sfc import create_flow_classifier, delete_flow_
 
 import ai_module_client as swagc_ai
 
-
 time_of_last_arrival = datetime.datetime.now()
 
 def get_time_of_last_arrival():
@@ -29,7 +28,6 @@ def notify_ai_module():
         sfcr_api_instance.sfcr_event()
     except Exception  as e:
         print("[ sfcr_controller ] Error: %s.\n" % e)
-
 
 def add_sfcr(body):  # noqa: E501
     """Add new SFC request.
@@ -69,3 +67,13 @@ def del_sfcr(id):  # noqa: E501
     delete_flow_classifier(id)
     db.del_sfcr(id)
 
+
+def get_sfcrs():  # noqa: E501
+    """Get currently active SFC requests.
+
+     # noqa: E501
+
+
+    :rtype: List[SFCR]
+    """
+    return db.get_all_sfcrs()

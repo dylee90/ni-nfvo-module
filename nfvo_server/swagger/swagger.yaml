@@ -15,7 +15,7 @@ paths:
   /sfcrs:
     get:
       tags:
-      - "info"
+      - "sfcr"
       summary: "Get currently active SFC requests."
       description: ""
       operationId: "get_sfcrs"
@@ -31,7 +31,7 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/SFCR"
-      x-swagger-router-controller: "nfvo_server.controllers.info_controller"
+      x-swagger-router-controller: "nfvo_server.controllers.sfcr_controller"
     post:
       tags:
       - "sfcr"
@@ -81,7 +81,7 @@ paths:
   /routes:
     get:
       tags:
-      - "info"
+      - "route"
       summary: "Get current route information, i.e., list of all active SFCRs including\
         \ their paths."
       description: ""
@@ -98,10 +98,10 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/Route"
-      x-swagger-router-controller: "nfvo_server.controllers.info_controller"
+      x-swagger-router-controller: "nfvo_server.controllers.route_controller"
     post:
       tags:
-      - "actions"
+      - "route"
       summary: "Route a request via the provided route. Return route id if success\
         \ (which also means input route id is ommitted)."
       description: ""
@@ -124,11 +124,11 @@ paths:
             type: "string"
         "400":
           description: "Invalid parameters supplied."
-      x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
+      x-swagger-router-controller: "nfvo_server.controllers.route_controller"
   /routes/{id}:
     put:
       tags:
-      - "actions"
+      - "route"
       summary: "Update a new route path or new sfcrs."
       description: ""
       operationId: "update_route"
@@ -155,10 +155,10 @@ paths:
             type: "string"
         "400":
           description: "Invalid parameters supplied."
-      x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
+      x-swagger-router-controller: "nfvo_server.controllers.route_controller"
     delete:
       tags:
-      - "actions"
+      - "route"
       summary: "Delete a Route."
       description: ""
       operationId: "del_route"
@@ -175,11 +175,11 @@ paths:
       responses:
         "200":
           description: "Success."
-      x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
+      x-swagger-router-controller: "nfvo_server.controllers.route_controller"
   /vnfs:
     post:
       tags:
-      - "actions"
+      - "vnf"
       summary: "Instantiate an instance of a VNF flavor on a given node."
       description: ""
       operationId: "deploy_vnf"
@@ -202,11 +202,11 @@ paths:
             type: "string"
         "400":
           description: "Invalid parameters supplied."
-      x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
+      x-swagger-router-controller: "nfvo_server.controllers.vnf_controller"
   /vnfs/{id}:
     delete:
       tags:
-      - "actions"
+      - "vnf"
       summary: "Destroy a VNF instance."
       description: ""
       operationId: "destroy_vnf"
@@ -225,11 +225,11 @@ paths:
           description: "Success."
         "400":
           description: "Invalid parameters supplied."
-      x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
+      x-swagger-router-controller: "nfvo_server.controllers.vnf_controller"
   /vnfs/{id}/shutdown:
     post:
       tags:
-      - "actions"
+      - "vnf"
       summary: "Shut down a VNF instance."
       description: ""
       operationId: "shutdown_vnf"
@@ -248,7 +248,7 @@ paths:
           description: "Success."
         "400":
           description: "Invalid parameters supplied."
-      x-swagger-router-controller: "nfvo_server.controllers.actions_controller"
+      x-swagger-router-controller: "nfvo_server.controllers.vnf_controller"
 definitions:
   SFCR:
     type: "object"
