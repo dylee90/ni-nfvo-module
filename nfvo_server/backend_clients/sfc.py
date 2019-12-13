@@ -53,6 +53,7 @@ def _get_data_port(vnf_instance_id):
     abort(req.status_code, error_message)
 
 def create_flow_classifier(sfcr):
+    client.rset_auth_info()
     url = "/v2.0/sfc/flow_classifiers"
     flow_classifier_ids = []
 
@@ -179,6 +180,7 @@ def _create_port_chain(postfix_name, port_pair_groups, flow_classifiers):
 
 
 def update_sfc(route_id, sfcr_ids=None, vnf_ids_list=None):
+    client.rset_auth_info()
     route = db.get_route(route_id)
     if route is None:
         error_message = "route_id: {} not found".format(route_id)
@@ -349,6 +351,7 @@ def _delete_port_pair_group(port_pair_group_id):
         abort(req.status_code, req.text)
 
 def delete_flow_classifier(flow_classifier_id):
+    client.rset_auth_info()
     url = "/v2.0/sfc/flow_classifiers"
     req = requests.delete("{}{}/{}".format(base_url, url, flow_classifier_id),
         headers={'X-Auth-Token': client.client.auth_token})
