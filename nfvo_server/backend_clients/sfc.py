@@ -42,6 +42,10 @@ def _get_data_port(vnf_instance_id):
     url = "v2.0/ports?device_id={}".format(vnf_instance_id)
     req = requests.get("{}{}".format(base_url, url),
         headers={'X-Auth-Token': client.client.auth_token})
+    if req.status_code != 200:
+        current_app.logger.error(req.text)
+        abort(req.status_code, req.text)
+
     req = req.json()
 
     for port in req["ports"]:
@@ -50,7 +54,7 @@ def _get_data_port(vnf_instance_id):
 
     error_message = "no data port for vnf id: {}".format(vnf_instance_id)
     current_app.logger.error(error_message)
-    abort(req.status_code, error_message)
+    abort(400, error_message)
 
 def create_flow_classifier(sfcr):
     client.rset_auth_info()
