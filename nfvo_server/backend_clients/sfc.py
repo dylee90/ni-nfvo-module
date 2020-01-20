@@ -13,17 +13,17 @@ vnf_cfg = cfg["openstack_client"]["vnf"]
 base_url = client.base_urls["network"]
 
 
-def create_sfc(fc_prefix, sfcr_ids, vnf_ids_list):
+def create_sfc(fc_prefix, sfcr_ids, vnf_ids_lists):
     client.rset_auth_info()
     headers = {'X-Auth-Token': client.client.auth_token}
 
-    if len(vnf_ids_list) == 0:
+    if len(vnf_ids_lists) == 0:
         error_message = "vnf list is empty"
         current_app.logger.error(error_message)
         abort(404, error_message)
 
     port_ids_list = []
-    for vnf_ids in vnf_ids_list:
+    for vnf_ids in vnf_ids_lists:
         port_ids = [_get_data_port(vnf_id) for vnf_id in vnf_ids]
         port_ids_list.append(port_ids)
 
@@ -183,7 +183,7 @@ def _create_port_chain(postfix_name, port_pair_groups, flow_classifiers):
         abort(req.status_code, req.text)
 
 
-def update_sfc(route_id, sfcr_ids=None, vnf_ids_list=None):
+def update_sfc(route_id, sfcr_ids=None, vnf_ids_lists=None):
     client.rset_auth_info()
     route = db.get_route(route_id)
     if route is None:
@@ -191,15 +191,15 @@ def update_sfc(route_id, sfcr_ids=None, vnf_ids_list=None):
         current_app.logger.error(error_message)
         abort(404, error_message)
 
+    if vnf_ids_lists:
+        _update_sfc_vnf_ids(route, vnf_ids_lists, update_db=False)
+        route.vnf_instance_ids = vnf_ids_lists
+
     if sfcr_ids:
         _update_sfc_flow_classifiers(route, sfcr_ids, update_db=False)
         route.sfcr_ids = sfcr_ids
 
-    if vnf_ids_list:
-        _update_sfc_vnf_ids(route, vnf_ids_list, update_db=False)
-        route.vnf_instance_ids = vnf_ids_list
-
-    if sfcr_ids or vnf_ids_list:
+    if sfcr_ids or vnf_ids_lists:
         db.update_route(route)
 
 def _update_sfc_flow_classifiers(route, sfcr_ids, update_db=True):
@@ -221,20 +221,27 @@ def _update_sfc_flow_classifiers(route, sfcr_ids, update_db=True):
         route.sfcr_ids = sfcr_ids
         db.update_route(route)
 
-def _update_sfc_vnf_ids(route, vnf_ids_list,  update_db=True):
+def _update_sfc_vnf_ids(route, vnf_ids_lists,  update_db=True):
     old_port_pairs = _get_all_port_pairs_of_route(route.id)
+    old_pp_groups = _get_existing_port_pair_groups(route.id)
+
+    if (len(old_pp_groups) != len(vnf_ids_lists)):
+        messages = "number of new port_pair_groups (or vnf types) " \
+                    "is different from the original"
+        current_app.logger.error(messages)
+        abort(400, messages)
 
     port_ids_list = []
-    for vnf_ids in vnf_ids_list:
+    for vnf_ids in vnf_ids_lists:
         port_ids = [_get_data_port(vnf_id) for vnf_id in vnf_ids]
         port_ids_list.append(port_ids)
 
     postfix_name = "{}_{}".format(route.sfc_name, str(uuid.uuid4()))
     new_port_pairs_list = _create_port_pairs(postfix_name, port_ids_list, allow_existing_pp=True)
-    _update_port_pair_groups(route.id, new_port_pairs_list)
+    _update_port_pair_groups(old_pp_groups, new_port_pairs_list)
 
     if update_db:
-        route.vnf_instance_ids = vnf_ids_list
+        route.vnf_instance_ids = vnf_ids_lists
         db.update_route(route)
 
     new_port_pairs = [pp for row in new_port_pairs_list for pp in row]
@@ -243,6 +250,14 @@ def _update_sfc_vnf_ids(route, vnf_ids_list,  update_db=True):
         if port_pair not in new_port_pairs:
             _delete_port_pair(port_pair)
 
+def _get_existing_port_pair_groups(route_id):
+    req = requests.get("{}{}{}".format(base_url, "/v2.0/sfc/port_chains/", route_id),
+        headers={'X-Auth-Token': client.client.auth_token})
+    if req.status_code != 200:
+        current_app.logger.error(req.text)
+        abort(req.status_code, req.text)
+    req = req.json()
+    return req["port_chain"]["port_pair_groups"]
 
 def _get_all_port_pairs_of_route(route_id):
     port_pairs = []
@@ -266,20 +281,12 @@ def _get_all_port_pairs_of_route(route_id):
 
     return port_pairs
 
-def _update_port_pair_groups(route_id, port_pairs_list):
-
-    req = requests.get("{}{}{}".format(base_url, "/v2.0/sfc/port_chains/", route_id),
-        headers={'X-Auth-Token': client.client.auth_token})
-    if req.status_code != 200:
-        current_app.logger.error(req.text)
-        abort(req.status_code, req.text)
-    req = req.json()
-    existing_ppp_groups = req["port_chain"]["port_pair_groups"]
+def _update_port_pair_groups(old_pp_groups, new_port_pairs_list):
     port_pair_groups = []
-    for i, pp_group in enumerate(existing_ppp_groups):
+    for i, pp_group in enumerate(old_pp_groups):
         body = {
                     "port_pair_group": {
-                        "port_pairs": port_pairs_list[i],
+                        "port_pairs": new_port_pairs_list[i],
                     }
                 }
 
