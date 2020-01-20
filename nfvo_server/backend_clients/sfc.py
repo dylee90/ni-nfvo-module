@@ -229,7 +229,8 @@ def _update_sfc_vnf_ids(route, vnf_ids_list,  update_db=True):
         port_ids = [_get_data_port(vnf_id) for vnf_id in vnf_ids]
         port_ids_list.append(port_ids)
 
-    new_port_pairs_list = _create_port_pairs(route.sfc_name, port_ids_list, allow_existing_pp=True)
+    postfix_name = "{}_{}".format(route.sfc_name, str(uuid.uuid4()))
+    new_port_pairs_list = _create_port_pairs(postfix_name, port_ids_list, allow_existing_pp=True)
     _update_port_pair_groups(route.id, new_port_pairs_list)
 
     if update_db:
@@ -274,7 +275,6 @@ def _update_port_pair_groups(route_id, port_pairs_list):
         abort(req.status_code, req.text)
     req = req.json()
     existing_ppp_groups = req["port_chain"]["port_pair_groups"]
-
     port_pair_groups = []
     for i, pp_group in enumerate(existing_ppp_groups):
         body = {
