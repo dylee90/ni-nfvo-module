@@ -13,7 +13,7 @@ vnf_cfg = cfg["openstack_client"]["vnf"]
 base_url = client.base_urls["network"]
 
 
-def create_sfc(fc_prefix, sfcr_ids, vnf_ids_lists):
+def create_sfc(fc_prefix, sfcr_ids, vnf_ids_lists, is_symmetric=False):
     client.rset_auth_info()
     headers = {'X-Auth-Token': client.client.auth_token}
 
@@ -34,7 +34,7 @@ def create_sfc(fc_prefix, sfcr_ids, vnf_ids_lists):
 
     port_pairs_ids_list = _create_port_pairs(postfix_name, port_ids_list)
     pp_group_ids = _create_port_pair_groups(postfix_name, port_pairs_ids_list)
-    p_chain_id = _create_port_chain(postfix_name, pp_group_ids, sfcr_ids)
+    p_chain_id = _create_port_chain(postfix_name, pp_group_ids, sfcr_ids, is_symmetric)
 
     return p_chain_id
 
@@ -64,6 +64,9 @@ def create_flow_classifier(sfcr):
     body = dict()
     # logical_source_port is required
     body["logical_source_port"] = _get_data_port(sfcr.source_client)
+
+    if sfcr.destination_client is not None:
+        body["logical_destination_port"] = _get_data_port(sfcr.destination_client)
 
     if sfcr.src_ip_prefix is not None:
         body["source_ip_prefix"] = sfcr.src_ip_prefix
@@ -163,12 +166,15 @@ def _create_port_pair_groups(postfix_name, port_pairs_list):
 
     return port_pair_groups
 
-def _create_port_chain(postfix_name, port_pair_groups, flow_classifiers):
+def _create_port_chain(postfix_name, port_pair_groups, flow_classifiers, is_symmetric):
     body = {
                 "port_chain": {
                     "flow_classifiers": flow_classifiers,
                     "port_pair_groups": port_pair_groups,
                     "name": "pc_{}".format(postfix_name),
+                    "chain_parameters": {
+                        "symmetric": True if is_symmetric else False
+                    }
                 }
             }
 

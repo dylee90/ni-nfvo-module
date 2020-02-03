@@ -51,7 +51,7 @@ def set_route(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = Route.from_dict(connexion.request.get_json())  # noqa: E501
-    route_id = create_sfc(body.sfc_name, body.sfcr_ids, body.vnf_instance_ids)
+    route_id = create_sfc(body.sfc_name, body.sfcr_ids, body.vnf_instance_ids, body.is_symmetric)
     body.id = route_id
     db.insert_route(body)
 

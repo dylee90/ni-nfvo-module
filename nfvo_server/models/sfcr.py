@@ -15,7 +15,7 @@ class SFCR(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, id: str=None, name: str=None, arrivaltime: datetime=None, source_client: str=None, src_ip_prefix: str=None, dst_ip_prefix: str=None, src_port_min: int=None, src_port_max: int=None, dst_port_min: int=None, dst_port_max: int=None, bw: int=None, delay: int=None, duration: int=None, proto: str=None, nf_chain: List[str]=None):  # noqa: E501
+    def __init__(self, id: str=None, name: str=None, arrivaltime: datetime=None, source_client: str=None, destination_client: str=None, src_ip_prefix: str=None, dst_ip_prefix: str=None, src_port_min: int=None, src_port_max: int=None, dst_port_min: int=None, dst_port_max: int=None, bw: int=None, delay: int=None, duration: int=None, proto: str=None, nf_chain: List[str]=None):  # noqa: E501
         """SFCR - a model defined in Swagger
 
         :param id: The id of this SFCR.  # noqa: E501
@@ -26,6 +26,8 @@ class SFCR(Model):
         :type arrivaltime: datetime
         :param source_client: The source_client of this SFCR.  # noqa: E501
         :type source_client: str
+        :param destination_client: The destination_client of this SFCR.  # noqa: E501
+        :type destination_client: str
         :param src_ip_prefix: The src_ip_prefix of this SFCR.  # noqa: E501
         :type src_ip_prefix: str
         :param dst_ip_prefix: The dst_ip_prefix of this SFCR.  # noqa: E501
@@ -54,6 +56,7 @@ class SFCR(Model):
             'name': str,
             'arrivaltime': datetime,
             'source_client': str,
+            'destination_client': str,
             'src_ip_prefix': str,
             'dst_ip_prefix': str,
             'src_port_min': int,
@@ -72,6 +75,7 @@ class SFCR(Model):
             'name': 'name',
             'arrivaltime': 'arrivaltime',
             'source_client': 'source_client',
+            'destination_client': 'destination_client',
             'src_ip_prefix': 'src_ip_prefix',
             'dst_ip_prefix': 'dst_ip_prefix',
             'src_port_min': 'src_port_min',
@@ -89,6 +93,7 @@ class SFCR(Model):
         self._name = name
         self._arrivaltime = arrivaltime
         self._source_client = source_client
+        self._destination_client = destination_client
         self._src_ip_prefix = src_ip_prefix
         self._dst_ip_prefix = dst_ip_prefix
         self._src_port_min = src_port_min
@@ -195,6 +200,27 @@ class SFCR(Model):
         """
 
         self._source_client = source_client
+
+    @property
+    def destination_client(self) -> str:
+        """Gets the destination_client of this SFCR.
+
+
+        :return: The destination_client of this SFCR.
+        :rtype: str
+        """
+        return self._destination_client
+
+    @destination_client.setter
+    def destination_client(self, destination_client: str):
+        """Sets the destination_client of this SFCR.
+
+
+        :param destination_client: The destination_client of this SFCR.
+        :type destination_client: str
+        """
+
+        self._destination_client = destination_client
 
     @property
     def src_ip_prefix(self) -> str:

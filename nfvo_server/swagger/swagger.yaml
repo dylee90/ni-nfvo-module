@@ -262,6 +262,8 @@ definitions:
         format: "date-time"
       source_client:
         type: "string"
+      destination_client:
+        type: "string"
       src_ip_prefix:
         type: "string"
       dst_ip_prefix:
@@ -298,6 +300,7 @@ definitions:
     example:
       src_port_max: 6
       source_client: "source_client"
+      destination_client: "destination_client"
       dst_ip_prefix: "dst_ip_prefix"
       nf_chain:
       - "nf_chain"
@@ -332,6 +335,8 @@ definitions:
           type: "array"
           items:
             type: "string"
+      is_symmetric:
+        type: "boolean"
     description: "Detailed routing information for a given SFCR ID. sfc_name is optional."
     example:
       vnf_instance_ids:
@@ -339,6 +344,7 @@ definitions:
         - "vnf_instance_ids"
       - - "vnf_instance_ids"
         - "vnf_instance_ids"
+      is_symmetric: true
       sfc_name: "sfc_name"
       id: "id"
       sfcr_ids:

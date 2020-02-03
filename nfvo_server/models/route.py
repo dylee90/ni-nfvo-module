@@ -15,7 +15,7 @@ class Route(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, id: str=None, sfc_name: str=None, sfcr_ids: List[str]=None, vnf_instance_ids: List[List[str]]=None):  # noqa: E501
+    def __init__(self, id: str=None, sfc_name: str=None, sfcr_ids: List[str]=None, vnf_instance_ids: List[List[str]]=None, is_symmetric: bool=None):  # noqa: E501
         """Route - a model defined in Swagger
 
         :param id: The id of this Route.  # noqa: E501
@@ -26,25 +26,30 @@ class Route(Model):
         :type sfcr_ids: List[str]
         :param vnf_instance_ids: The vnf_instance_ids of this Route.  # noqa: E501
         :type vnf_instance_ids: List[List[str]]
+        :param is_symmetric: The is_symmetric of this Route.  # noqa: E501
+        :type is_symmetric: bool
         """
         self.swagger_types = {
             'id': str,
             'sfc_name': str,
             'sfcr_ids': List[str],
-            'vnf_instance_ids': List[List[str]]
+            'vnf_instance_ids': List[List[str]],
+            'is_symmetric': bool
         }
 
         self.attribute_map = {
             'id': 'id',
             'sfc_name': 'sfc_name',
             'sfcr_ids': 'sfcr_ids',
-            'vnf_instance_ids': 'vnf_instance_ids'
+            'vnf_instance_ids': 'vnf_instance_ids',
+            'is_symmetric': 'is_symmetric'
         }
 
         self._id = id
         self._sfc_name = sfc_name
         self._sfcr_ids = sfcr_ids
         self._vnf_instance_ids = vnf_instance_ids
+        self._is_symmetric = is_symmetric
 
     @classmethod
     def from_dict(cls, dikt) -> 'Route':
@@ -142,3 +147,24 @@ class Route(Model):
         """
 
         self._vnf_instance_ids = vnf_instance_ids
+
+    @property
+    def is_symmetric(self) -> bool:
+        """Gets the is_symmetric of this Route.
+
+
+        :return: The is_symmetric of this Route.
+        :rtype: bool
+        """
+        return self._is_symmetric
+
+    @is_symmetric.setter
+    def is_symmetric(self, is_symmetric: bool):
+        """Sets the is_symmetric of this Route.
+
+
+        :param is_symmetric: The is_symmetric of this Route.
+        :type is_symmetric: bool
+        """
+
+        self._is_symmetric = is_symmetric
