@@ -52,7 +52,6 @@ def create_server(server_prefix, flavor_id, host_name, custom_user_data):
                     "name" : server_name,
                     "imageRef" : os_image_id,
                     "flavorRef" : flavor_id,
-                    "availability_zone": "nova:{}".format(host_name),
                     "user_data" : user_data,
                     "networks": [
                         {"uuid": vnf_cfg["mgmt_net_id"]},
@@ -60,6 +59,11 @@ def create_server(server_prefix, flavor_id, host_name, custom_user_data):
                     ],
                 }
             }
+
+    if host_name is not None:
+        # FIXME: this assume the availability zone is nova. However, if
+        # the host does not belong to nova zone, somehow command still works ...
+        data["server"]["availability_zone"]="nova:{}".format(host_name)
 
     url = "/servers"
     req = requests.post("{}{}".format(base_url, url),
