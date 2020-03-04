@@ -35,10 +35,12 @@ def create_server(server_prefix, flavor_id, host_name, custom_user_data):
 
     if custom_user_data is not None:
         user_data = base64.b64encode(custom_user_data.encode('ascii'))
-    else:
+    elif default_user_data is not None:
         # store user_data in extra_specs convert \n to \\n. need to restore
         default_user_data = default_user_data.replace('\\n', '\n')
         user_data = base64.b64encode(default_user_data.encode('ascii'))
+    else:
+        user_data = ''
 
     if server_prefix:
         server_name = "{}_{}".format(server_prefix, str(uuid.uuid4()))
