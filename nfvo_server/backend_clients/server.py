@@ -4,13 +4,15 @@ import uuid
 import base64
 
 from nfvo_server.config import cfg
+from nfvo_server.backend_clients.utils import get_net_id_from_name
 from nfvo_server.backend_clients.utils import openstack_client as client
 
 from flask import abort
 from flask import current_app
 
 vnf_cfg = cfg["openstack_client"]["vnf"]
-
+mgmt_net_id = get_net_id_from_name(vnf_cfg["mgmt_net_name"])
+data_net_id = get_net_id_from_name(vnf_cfg["data_net_name"])
 
 def create_server(server_prefix, flavor_id, host_name, custom_user_data):
     client.rset_auth_info()
@@ -54,8 +56,8 @@ def create_server(server_prefix, flavor_id, host_name, custom_user_data):
                     "flavorRef" : flavor_id,
                     "user_data" : user_data,
                     "networks": [
-                        {"uuid": vnf_cfg["mgmt_net_id"]},
-                        {"uuid": vnf_cfg["data_net_id"]},
+                        {"uuid": mgmt_net_id},
+                        {"uuid": data_net_id},
                     ],
                 }
             }

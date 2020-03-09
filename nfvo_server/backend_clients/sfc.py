@@ -3,6 +3,7 @@ import requests
 import uuid
 
 from nfvo_server.config import cfg
+from nfvo_server.backend_clients.utils import get_net_id_from_name
 from nfvo_server.backend_clients.utils import openstack_client as client
 from nfvo_server.database import db
 
@@ -10,6 +11,7 @@ from flask import abort
 from flask import current_app
 
 vnf_cfg = cfg["openstack_client"]["vnf"]
+data_net_id = get_net_id_from_name(vnf_cfg["data_net_name"])
 base_url = client.base_urls["network"]
 
 
@@ -49,7 +51,7 @@ def _get_data_port(vnf_instance_id):
     req = req.json()
 
     for port in req["ports"]:
-        if port["network_id"] == vnf_cfg["data_net_id"]:
+        if port["network_id"] == data_net_id:
             return port["id"]
 
     error_message = "no data port for vnf id: {}".format(vnf_instance_id)

@@ -9,5 +9,6 @@ openstack_client:
 
   vnf:
     # each vnfs connect two openstack networks, data network and management network
-    data_net_id: <data_net_id>
-    mgmt_net_id: <mgmt_net_id>
+    # the name should be unique
+    data_net_name: "NI-data"
+    mgmt_net_name: "NI-management"
