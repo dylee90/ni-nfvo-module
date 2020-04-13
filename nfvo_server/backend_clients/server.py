@@ -15,11 +15,9 @@ mgmt_net_id = get_net_id_from_name(vnf_cfg["mgmt_net_name"])
 data_net_id = get_net_id_from_name(vnf_cfg["data_net_name"])
 
 def create_server(server_prefix, flavor_id, host_name, custom_user_data):
-    client.rset_auth_info()
-
     # extra specs API link: https://github.com/openstack/nova/blob/master/api-ref/source/os-flavor-extra-specs.inc
     base_url = client.base_urls["compute"]
-    headers = {'X-Auth-Token': client.client.auth_token}
+    headers = {'X-Auth-Token': client.get_token()}
 
     url = "/flavors/{flavors_id}/os-extra_specs".format(flavors_id=flavor_id)
     req = requests.get("{}{}".format(base_url, url),
@@ -79,11 +77,9 @@ def create_server(server_prefix, flavor_id, host_name, custom_user_data):
         abort(req.status_code, req.text)
 
 def stop_server(server_id):
-    client.rset_auth_info()
-
     base_url = client.base_urls["compute"]
     url = "/servers/{}/action".format(server_id)
-    headers = {'X-Auth-Token': client.client.auth_token}
+    headers = {'X-Auth-Token': client.get_token()}
 
     data = {
                 "os-stop" : "dummy"
@@ -98,11 +94,9 @@ def stop_server(server_id):
         abort(req.status_code, req.text)
 
 def destroy_server(server_id):
-    client.rset_auth_info()
-
     base_url = client.base_urls["compute"]
     url = "/servers/{}".format(server_id)
-    headers = {'X-Auth-Token': client.client.auth_token}
+    headers = {'X-Auth-Token': client.get_token()}
 
     req = requests.delete("{}{}".format(base_url, url),
         headers=headers)

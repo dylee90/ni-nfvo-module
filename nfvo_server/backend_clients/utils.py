@@ -21,10 +21,10 @@ class OpenstackClient():
         auth = v3.Password(**self.auth_cfg)
         sess = session.Session(auth=auth)
         client = keystone_client.Client(session=sess)
-        client.authenticate(**self.auth_cfg)
         return client
 
     def _get_base_urls(self):
+        self.client.authenticate(**self.auth_cfg)
         base_urls = dict()
         endpoints = self.client.endpoints.list()
         for endpoint in endpoints:
@@ -32,23 +32,14 @@ class OpenstackClient():
             base_urls[service.type] = endpoint.url
         return base_urls
 
-    def rset_auth_info(self):
-        # FIXME: after the token is expired(?), we should re-authenticate.
-        # however, the auth_url, username and password is also lost,
-        # causing error on  re-authenticate call. A dirty fix
-        # is to set them every call.
-        self.client.auth_url = self.auth_cfg["auth_url"]
-        self.client.username = self.auth_cfg["username"]
-        self.client.password = self.auth_cfg["password"]
-
+    def get_token(self):
+        return self.client.session.get_token()
 
 def get_net_id_from_name(net_name):
-    openstack_client.rset_auth_info()
     base_url = openstack_client.base_urls["network"]
-    headers = {'X-Auth-Token': openstack_client.client.auth_token}
 
     req = requests.get("{}{}".format(base_url, "/v2.0/networks"),
-        headers={'X-Auth-Token': openstack_client.client.auth_token})
+        headers={'X-Auth-Token': openstack_client.get_token()})
     if req.status_code != 200:
         current_app.logger.error(req.text)
         abort(req.status_code, req.text)

@@ -16,8 +16,7 @@ base_url = client.base_urls["network"]
 
 
 def create_sfc(fc_prefix, sfcr_ids, vnf_ids_lists, is_symmetric=False):
-    client.rset_auth_info()
-    headers = {'X-Auth-Token': client.client.auth_token}
+    headers = {'X-Auth-Token': client.get_token()}
 
     if len(vnf_ids_lists) == 0:
         error_message = "vnf list is empty"
@@ -43,7 +42,7 @@ def create_sfc(fc_prefix, sfcr_ids, vnf_ids_lists, is_symmetric=False):
 def _get_data_port(vnf_instance_id):
     url = "v2.0/ports?device_id={}".format(vnf_instance_id)
     req = requests.get("{}{}".format(base_url, url),
-        headers={'X-Auth-Token': client.client.auth_token})
+        headers={'X-Auth-Token': client.get_token()})
     if req.status_code != 200:
         current_app.logger.error(req.text)
         abort(req.status_code, req.text)
@@ -59,7 +58,6 @@ def _get_data_port(vnf_instance_id):
     abort(400, error_message)
 
 def create_flow_classifier(sfcr):
-    client.rset_auth_info()
     url = "/v2.0/sfc/flow_classifiers"
     flow_classifier_ids = []
 
@@ -89,7 +87,7 @@ def create_flow_classifier(sfcr):
 
     req = requests.post("{}{}".format(base_url, url),
         json=body,
-        headers={'X-Auth-Token': client.client.auth_token})
+        headers={'X-Auth-Token': client.get_token()})
 
     if req.status_code == 201:
         return req.json()["flow_classifier"]["id"]
@@ -102,7 +100,7 @@ def _create_port_pairs(postfix_name, port_ids_list, allow_existing_pp=False):
     # create port_pairs from ports. Use the same port for ingress and egress
 
     req = requests.get("{}{}".format(base_url, "/v2.0/sfc/port_pairs"),
-        headers={'X-Auth-Token': client.client.auth_token})
+        headers={'X-Auth-Token': client.get_token()})
     if req.status_code != 200:
         current_app.logger.error(req.text)
         abort(req.status_code, req.text)
@@ -133,7 +131,7 @@ def _create_port_pairs(postfix_name, port_ids_list, allow_existing_pp=False):
 
                 req = requests.post("{}{}".format(base_url, "/v2.0/sfc/port_pairs"),
                     json=body,
-                    headers={'X-Auth-Token': client.client.auth_token})
+                    headers={'X-Auth-Token': client.get_token()})
 
                 if req.status_code == 201:
                     port_pairs.append(req.json()["port_pair"]["id"])
@@ -158,7 +156,7 @@ def _create_port_pair_groups(postfix_name, port_pairs_list):
 
         req = requests.post("{}{}".format(base_url, "/v2.0/sfc/port_pair_groups"),
             json=body,
-            headers={'X-Auth-Token': client.client.auth_token})
+            headers={'X-Auth-Token': client.get_token()})
 
         if req.status_code == 201:
             port_pair_groups.append(req.json()["port_pair_group"]["id"])
@@ -182,7 +180,7 @@ def _create_port_chain(postfix_name, port_pair_groups, flow_classifiers, is_symm
 
     req = requests.post("{}{}".format(base_url, "/v2.0/sfc/port_chains"),
         json=body,
-        headers={'X-Auth-Token': client.client.auth_token})
+        headers={'X-Auth-Token': client.get_token()})
 
     if req.status_code == 201:
         return req.json()["port_chain"]["id"]
@@ -192,7 +190,6 @@ def _create_port_chain(postfix_name, port_pair_groups, flow_classifiers, is_symm
 
 
 def update_sfc(route_id, sfcr_ids=None, vnf_ids_lists=None):
-    client.rset_auth_info()
     route = db.get_route(route_id)
     if route is None:
         error_message = "route_id: {} not found".format(route_id)
@@ -219,7 +216,7 @@ def _update_sfc_flow_classifiers(route, sfcr_ids, update_db=True):
 
     req = requests.put("{}{}{}".format(base_url, "/v2.0/sfc/port_chains/", route.id),
         json=body,
-        headers={'X-Auth-Token': client.client.auth_token})
+        headers={'X-Auth-Token': client.get_token()})
 
     if req.status_code != 200:
         current_app.logger.error(req.text)
@@ -260,7 +257,7 @@ def _update_sfc_vnf_ids(route, vnf_ids_lists,  update_db=True):
 
 def _get_existing_port_pair_groups(route_id):
     req = requests.get("{}{}{}".format(base_url, "/v2.0/sfc/port_chains/", route_id),
-        headers={'X-Auth-Token': client.client.auth_token})
+        headers={'X-Auth-Token': client.get_token()})
     if req.status_code != 200:
         current_app.logger.error(req.text)
         abort(req.status_code, req.text)
@@ -271,7 +268,7 @@ def _get_all_port_pairs_of_route(route_id):
     port_pairs = []
 
     req = requests.get("{}{}{}".format(base_url, "/v2.0/sfc/port_chains/", route_id),
-        headers={'X-Auth-Token': client.client.auth_token})
+        headers={'X-Auth-Token': client.get_token()})
     if req.status_code != 200:
         current_app.logger.error(req.text)
         abort(req.status_code, req.text)
@@ -280,7 +277,7 @@ def _get_all_port_pairs_of_route(route_id):
 
     for pp_group in pp_groups:
         req = requests.get("{}{}{}".format(base_url, "/v2.0/sfc/port_pair_groups/", pp_group),
-        headers={'X-Auth-Token': client.client.auth_token})
+        headers={'X-Auth-Token': client.get_token()})
         if req.status_code != 200:
             current_app.logger.error(req.text)
             abort(req.status_code, req.text)
@@ -300,7 +297,7 @@ def _update_port_pair_groups(old_pp_groups, new_port_pairs_list):
 
         req = requests.put("{}{}{}".format(base_url, "/v2.0/sfc/port_pair_groups/", pp_group),
             json=body,
-            headers={'X-Auth-Token': client.client.auth_token})
+            headers={'X-Auth-Token': client.get_token()})
 
         if req.status_code != 200:
             current_app.logger.error(req.text)
@@ -308,13 +305,12 @@ def _update_port_pair_groups(old_pp_groups, new_port_pairs_list):
 
 
 def delete_sfc(port_chain_id):
-    client.rset_auth_info()
     _delete_port_chain_recursive(port_chain_id)
 
 def _delete_port_chain_recursive(port_chain_id):
     url = "/v2.0/sfc/port_chains"
     req = requests.get("{}{}/{}".format(base_url, url, port_chain_id),
-        headers={'X-Auth-Token': client.client.auth_token})
+        headers={'X-Auth-Token': client.get_token()})
     if req.status_code != 200:
         current_app.logger.error(req.text)
         abort(req.status_code, req.text)
@@ -333,7 +329,7 @@ def _delete_port_chain_recursive(port_chain_id):
 def _delete_port_chain(port_chain_id):
     url = "/v2.0/sfc/port_chains"
     req = requests.delete("{}{}/{}".format(base_url, url, port_chain_id),
-        headers={'X-Auth-Token': client.client.auth_token})
+        headers={'X-Auth-Token': client.get_token()})
     if req.status_code != 204:
         current_app.logger.error(req.text)
         abort(req.status_code, req.text)
@@ -341,7 +337,7 @@ def _delete_port_chain(port_chain_id):
 def _delete_port_pair(port_pair_id):
     url = "/v2.0/sfc/port-pairs"
     req = requests.delete("{}{}/{}".format(base_url, url, port_pair_id),
-        headers={'X-Auth-Token': client.client.auth_token})
+        headers={'X-Auth-Token': client.get_token()})
     if req.status_code != 204:
         current_app.logger.error(req.text)
         abort(req.status_code, req.text)
@@ -349,7 +345,7 @@ def _delete_port_pair(port_pair_id):
 def _delete_port_pair_group_recursive(port_pair_group_id):
     url = "/v2.0/sfc/port_pair_groups"
     req = requests.get("{}{}/{}".format(base_url, url, port_pair_group_id),
-        headers={'X-Auth-Token': client.client.auth_token})
+        headers={'X-Auth-Token': client.get_token()})
     if req.status_code != 200:
         current_app.logger.error(req.text)
         abort(req.status_code, req.text)
@@ -364,16 +360,15 @@ def _delete_port_pair_group_recursive(port_pair_group_id):
 def _delete_port_pair_group(port_pair_group_id):
     url = "/v2.0/sfc/port_pair_groups"
     req = requests.delete("{}{}/{}".format(base_url, url, port_pair_group_id),
-        headers={'X-Auth-Token': client.client.auth_token})
+        headers={'X-Auth-Token': client.get_token()})
     if req.status_code != 204:
         current_app.logger.error(req.text)
         abort(req.status_code, req.text)
 
 def delete_flow_classifier(flow_classifier_id):
-    client.rset_auth_info()
     url = "/v2.0/sfc/flow_classifiers"
     req = requests.delete("{}{}/{}".format(base_url, url, flow_classifier_id),
-        headers={'X-Auth-Token': client.client.auth_token})
+        headers={'X-Auth-Token': client.get_token()})
     if req.status_code != 204:
         current_app.logger.error(req.text)
         abort(req.status_code, req.text)
